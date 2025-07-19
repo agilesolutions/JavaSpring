@@ -29,7 +29,7 @@ class ShareServiceTest extends BaseIntegrationTest {
     @Test
     public void givenProductRepository_whenSaveAndRetrieveProduct_thenOK() {
 
-        List<Share> shares = shareRepository.findAll();
+        List<Share> shares = (List<Share>) shareRepository.findAll();
 
         assertAll("check all",
                 () -> assertNotEquals(0, shares.size()));
