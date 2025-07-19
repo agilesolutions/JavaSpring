@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allinone-deployment
+  labels:
+    app: allinone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allinone
+  template:
+    metadata:
+      # kubectl rollout history deployment/allinone-deployment
+      annotations:
+        kubernetes.io/change-cause: "Updated image to #{VERSION}#"
+      labels:
+        app: allinone
+    spec:
+      containers:
+        - name: allinone
+          image: agilesolutions/allinone:latest
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 5
+            failureThreshold: 15
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 5
+            failureThreshold: 15
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /unhealthy
+                port: http
+#          terminationGracePeriodSeconds: 10
+          volumeMounts:
+            - name: podinfo
+              mountPath: /etc/podinfo
+              readOnly: false
+          env:
+            - name: LABEL
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['app']
+      imagePullSecrets:
+        - name: my-acr-secret
+      volumes:
+        - name: podinfo
+          downwardAPI:
+            items:
+              - path: "labels"
+                fieldRef:
+                  fieldPath: metadata.labels
+              - path: "annotations"
+                fieldRef:
+                  fieldPath: metadata.annotations
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: allinone-loadbalancer-service
+  labels:
+    app: allinone
+spec:
+  type: LoadBalancer
+  selector:
+    app: allinone
+  ports:
+    - port: 80
+      targetPort: 80

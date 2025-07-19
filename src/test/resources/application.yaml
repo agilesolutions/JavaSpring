@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDatasoure
+    driverClassName: org.postgresql.Driver
+    jdbcUrl: jdbc:psotgresql://com.rong:5432/portfolio?ApplicationName=PortfolioService&currentSchema=portfolio
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    platform: postgresql
+    hikari:
+      connection-timeout: 30000
+      max-pool-size: 10
+      minimum-idle: 0
+      idleTimeout: 10000
+      max-lifetime: 180000
+  flyway:
+    enabled: true
+    outOfOrder: true
+    ignoreFutureMigrations: true
+    locations: classpath:/db/flyway/postgres
+    url: jdbc:h2:mem:database
+    user: databaseUser
+    password: databasePassword
+
+twelvedata:
+  api:
+    url: https://api.twelvedata.com/
+    key: demo

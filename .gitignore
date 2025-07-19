@@ -16,10 +16,24 @@
 *.iml
 *.ipr
 
-### NetBeans ###
-/nbproject/private/
+### gradle build files
+
+/out/
 /build/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+!/build/libs/application.jar
+/.gradle/
+!/gradle/wrapper/gradle-wrapper.jar
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# lock files
+
+*.terraform.lock.*
+
+# Crash log files
+crash.log

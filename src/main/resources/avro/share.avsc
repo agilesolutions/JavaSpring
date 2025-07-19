@@ -1,0 +1,9 @@
+{"namespace": "com.agilesolutions.kafka.model",
+  "type": "record",
+  "name": "Share",
+  "fields": [
+    {"name": "id",  "type": ["int", "null"]},
+    {"name": "company",  "type": ["string", "null"]},
+    {"name": "quantity",  "type": ["int", "null"]}
+  ]
+}

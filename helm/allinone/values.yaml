@@ -1,0 +1,22 @@
+namespace: allinone
+replicaCount: 1
+
+image:
+  repository: agilesolutions/allinone
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: allinone.127.0.0.1.nip.io
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
