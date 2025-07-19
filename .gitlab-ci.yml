@@ -25,12 +25,14 @@ variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
 
 cache:
+  image: eclipse-temurin:latest
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - .gradle/wrapper
     - .gradle/caches
 
 before_script:
+  image: eclipse-temurin:latest
   - chmod +x ./gradlew  # if using the Gradle wrapper
   - ./gradlew --version
 
