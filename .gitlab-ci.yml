@@ -78,7 +78,7 @@ docker-build:
 #  - echo "$KUBECONFIG_B64" | base64 -d > $KUBECONFIG
 
 deploy-job:      # This job runs in the deploy stage.
-  environment: production 
+#  environment: production
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   image: bitnami/kubectl:latest
   script:
