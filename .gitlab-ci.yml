@@ -26,6 +26,8 @@ include:
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  IMAGE_NAME: $CI_REGISTRY_IMAGE/k8sdemo
+  DOCKER_DRIVER: overlay2
 
 #cache:
 #  key: ${CI_COMMIT_REF_SLUG}
@@ -59,6 +61,16 @@ lint-test-job:   # This job also runs in the test stage.
     - echo "Linting code... This will take about 10 seconds."
     - sleep 10
     - echo "No lint issues found."
+
+docker-build:
+  stage: docker
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+  only:
 
 deploy-job:      # This job runs in the deploy stage.
   environment: production 
