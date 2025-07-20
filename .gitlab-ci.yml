@@ -70,8 +70,8 @@ docker-build:
   script:
     - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
     - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
-  only:
-
+#  only:
+#    - main
 deploy-job:      # This job runs in the deploy stage.
   environment: production 
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
