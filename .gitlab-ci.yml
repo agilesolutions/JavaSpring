@@ -72,27 +72,32 @@ docker-build:
 #    - docker login registry.gitlab.com
 #    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
 #  only:
-#    - main
+#    - master
 
 #before_script:
 #  - echo "$KUBECONFIG_B64" | base64 -d > $KUBECONFIG
 
-deploy-job:      # This job runs in the deploy stage.
+deploy-kubectl:      # This job runs in the deploy stage.
 #  environment: production
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image: bitnami/kubectl:latest
+  image: bitnami/kubectl:1.29.6
+  entrypoint: ['']
+  before_script:
+    - kubectl version --client
   script:
     - kubectl version --short
 #    - kubectl config get-contexts
 #    - kubectl config use-context $(kubectl config current-context)
 #    - kubectl apply -f manifests/Deployment-and-LoadBalancer-Service.yml
 #  only:
-#    - main
+#    - master
 
 # Alternative HELM deployment
-#deploy:
-#  image: alpine/helm:3.13.1
-#  stage: deploy
-#  script:
+deploy-helm:
+  image: alpine/helm:3.15.2
+  stage: deploy
+  script:
+    - helm version
+    - echo "Now you can use helm commands you want"
 #    - echo "$KUBECONFIG_B64" | base64 -d > $KUBECONFIG
 #    - helm upgrade --install myapp ./chart --namespace=my-namespace --create-namespace
