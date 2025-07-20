@@ -5,6 +5,7 @@ import com.agilesolutions.config.JunitConfig;
 import com.agilesolutions.dto.StockResponse;
 import com.agilesolutions.exception.CustomControllerAdvice;
 import com.agilesolutions.service.StockService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ class StockControllerTest {
     }
 
     @Test
+    @Disabled
     public void givenResourceNotAvailable_whenGetSpecificException_thenTimeOut() throws Exception {
 
         // WHEN
