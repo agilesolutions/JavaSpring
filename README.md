@@ -34,6 +34,19 @@ If Auto DevOps is not already enabled for this project, you can [turn it on](htt
 ```
 gradle generateAvro
 gradle bootRun
-
+```
 http://localhost:8080/jpa/shares
 http://localhost:8080/mongo/shares
+
+## GITLAB CI kubernetes deploy to public cluster
+
+- Store k8s credentials as protected variables
+- create kubeconfig file
+- 
+
+```
+kubectl config view --minify --flatten > kubeconfig.yaml
+base64 kubeconfig.yaml
+```
+
+

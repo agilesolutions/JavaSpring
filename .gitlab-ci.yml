@@ -29,6 +29,7 @@ variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   IMAGE_NAME: $CI_REGISTRY_IMAGE/k8sdemo
   DOCKER_DRIVER: overlay2
+#  KUBECONFIG: "$CI_PROJECT_DIR/kubeconfig.yaml"
 
 #cache:
 #  key: ${CI_COMMIT_REF_SLUG}
@@ -72,6 +73,10 @@ docker-build:
 #    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
 #  only:
 #    - main
+
+#before_script:
+#  - echo "$KUBECONFIG_B64" | base64 -d > $KUBECONFIG
+
 deploy-job:      # This job runs in the deploy stage.
   environment: production 
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -83,3 +88,11 @@ deploy-job:      # This job runs in the deploy stage.
 #    - kubectl apply -f manifests/Deployment-and-LoadBalancer-Service.yml
   only:
     - main
+
+# Alternative HELM deployment
+#deploy:
+#  image: alpine/helm:3.13.1
+#  stage: deploy
+#  script:
+#    - echo "$KUBECONFIG_B64" | base64 -d > $KUBECONFIG
+#    - helm upgrade --install myapp ./chart --namespace=my-namespace --create-namespace
