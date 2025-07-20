@@ -45,7 +45,7 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Compiling the code..."
-    - gradle bootJar
+    - gradle release
     - echo "Compile complete."
   artifacts:
     name: "application.jar"
@@ -67,8 +67,8 @@ docker-build:
     - docker:dind
   script:
     - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
-    - docker login registry.gitlab.com
-    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+#    - docker login registry.gitlab.com
+#    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
 #  only:
 #    - main
 deploy-job:      # This job runs in the deploy stage.
