@@ -19,7 +19,10 @@
 /build/
 !/build/libs/application.jar
 /.gradle/
+/gradle/
 !/gradle/wrapper/gradle-wrapper.jar
+gradlew
+gradlew.bat
 
 # Local .terraform directories
 **/.terraform/*

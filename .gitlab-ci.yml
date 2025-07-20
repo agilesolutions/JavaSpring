@@ -60,13 +60,6 @@ unit-test-job:   # This job runs in the test stage.
     - gradle test
     - echo "Code coverage is 90%"
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
-
 docker-build:
   stage: docker
   image: docker:latest
@@ -74,6 +67,7 @@ docker-build:
     - docker:dind
   script:
     - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker login registry.gitlab.com
     - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
 #  only:
 #    - main
