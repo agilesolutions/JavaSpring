@@ -44,9 +44,10 @@ build-job:       # This job runs in the build stage, which runs first.
 #  image: gradle:8.7-jdk21
   stage: build
   script:
-    - echo "Compiling the code..."
-    - gradle release
-    - echo "Compile complete."
+    - echo "Compiling, build and package..."
+    - gradle bootJar
+    - gradle generateHelmChart
+    - echo "Build."
   artifacts:
     name: "application.jar"
     paths:
@@ -74,6 +75,11 @@ docker-build:
 deploy-job:      # This job runs in the deploy stage.
   environment: production 
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  image: bitnami/kubectl:latest
   script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+    - kubectl version --short
+#    - kubectl config get-contexts
+#    - kubectl config use-context $(kubectl config current-context)
+#    - kubectl apply -f manifests/Deployment-and-LoadBalancer-Service.yml
+  only:
+    - main
