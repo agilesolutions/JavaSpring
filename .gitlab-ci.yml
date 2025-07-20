@@ -86,8 +86,8 @@ deploy-job:      # This job runs in the deploy stage.
 #    - kubectl config get-contexts
 #    - kubectl config use-context $(kubectl config current-context)
 #    - kubectl apply -f manifests/Deployment-and-LoadBalancer-Service.yml
-  only:
-    - main
+#  only:
+#    - main
 
 # Alternative HELM deployment
 #deploy:
