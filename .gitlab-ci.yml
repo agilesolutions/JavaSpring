@@ -19,6 +19,7 @@ default:
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
+  - docker
   - deploy
 
 include:
