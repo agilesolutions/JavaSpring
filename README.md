@@ -37,6 +37,7 @@ gradle bootRun
 ```
 http://localhost:8080/jpa/shares
 http://localhost:8080/mongo/shares
+http://localhost:8080/api/assets/stockPrices/AAPL
 
 ## GITLAB CI kubernetes deploy to public cluster
 
