@@ -85,6 +85,7 @@ deploy-kubectl:      # This job runs in the deploy stage.
     - kubectl version --client
   script:
     - kubectl version
+    - echo "Now you can use kubectl commands you want"
 #    - kubectl config get-contexts
 #    - kubectl config use-context $(kubectl config current-context)
 #    - kubectl apply -f manifests/Deployment-and-LoadBalancer-Service.yml
