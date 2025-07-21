@@ -93,7 +93,7 @@ deploy-kubectl:      # This job runs in the deploy stage.
 
 # Alternative HELM deployment
 deploy-helm:
-  image: alpine/helm:3.15.2
+  image: dtzar/helm-kubectl:latest
   stage: deploy
   script:
     - helm version
