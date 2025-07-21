@@ -80,7 +80,7 @@ docker-build:
 deploy-kubectl:      # This job runs in the deploy stage.
 #  environment: production
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  image: d3fk/kubectl:latest
+  image: dtzar/helm-kubectl:latest
   before_script:
     - kubectl version --client
   script:
