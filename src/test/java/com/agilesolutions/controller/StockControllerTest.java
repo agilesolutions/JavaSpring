@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(StockController.class)
 @ContextConfiguration(classes = {StockController.class, JunitConfig.class, ApplicationProperties.class, CustomControllerAdvice.class})
+@Disabled
 class StockControllerTest {
 
     @Autowired

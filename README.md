@@ -35,10 +35,10 @@ If Auto DevOps is not already enabled for this project, you can [turn it on](htt
 gradle generateAvro
 gradle bootRun
 ```
-http://localhost:8080/jpa/shares
-http://localhost:8080/mongo/shares
-http://localhost:8080/kafka/shares
-http://localhost:8080/api/assets/stockPrices/AAPL
+- http://localhost:8080/jpa/shares
+- http://localhost:8080/mongo/shares
+- http://localhost:8080/kafka/shares
+- http://localhost:8080/api/assets/stockPrices/AAPL
 
 ## GITLAB CI kubernetes deploy to public cluster
 
