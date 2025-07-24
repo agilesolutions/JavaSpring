@@ -1,9 +1,7 @@
 package com.agilesolutions.config;
 
 import com.agilesolutions.kafka.service.KafkaShareService;
-import com.agilesolutions.mvc.AvroJsonHttpMessageConverter;
 import com.agilesolutions.service.StockService;
-import org.apache.avro.specific.SpecificRecordBase;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +17,6 @@ public class JunitConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new AvroJsonHttpMessageConverter<SpecificRecordBase>());
         converters.add(new MappingJackson2HttpMessageConverter());
     }
 
@@ -36,9 +33,4 @@ public class JunitConfig implements WebMvcConfigurer {
     }
 
 
-    @Bean
-    public AvroJsonHttpMessageConverter<SpecificRecordBase> createAvroHttpMessageConverter() {
-
-        return new AvroJsonHttpMessageConverter<>();
-    }
 }
