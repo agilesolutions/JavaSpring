@@ -26,7 +26,7 @@ public class JpaShareService {
      * @return a list of all Share entities
      */
     public List<Share> getAllShares() {
-        return shareRepository.findAll();
+        return (List<Share>) shareRepository.findAll();
     }
 
     /**

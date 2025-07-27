@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
@@ -27,7 +28,7 @@ class JpaShareControllerTest {
     @Test
     void givenShareExists_whenGetShareById_thenReturnShare() throws Exception {
         // GIVEN
-        Share share = new Share(1L, "Company A", 100);
+        Share share = new Share(1L, "Company A", 100, LocalDate.now());
         when(shareService.getShareById(1L)).thenReturn(Optional.of(share));
 
         // WHEN & THEN
@@ -49,7 +50,7 @@ class JpaShareControllerTest {
     @Test
     void whenCreateShare_thenReturnCreatedShare() throws Exception {
         // GIVEN
-        Share share = new Share(1L, "Company A", 100);
+        Share share = new Share(1L, "Company A", 100, LocalDate.now());
         when(shareService.createShare(Mockito.any(Share.class))).thenReturn(share);
 
         // WHEN & THEN
@@ -63,7 +64,7 @@ class JpaShareControllerTest {
     @Test
     void givenShareExists_whenUpdateShare_thenReturnUpdatedShare() throws Exception {
         // GIVEN
-        Share updatedShare = new Share(1L, "Company B", 200);
+        Share updatedShare = new Share(1L, "Company B", 200, LocalDate.now());
         when(shareService.updateShare(Mockito.eq(1L), Mockito.any(Share.class))).thenReturn(Optional.of(updatedShare));
 
         // WHEN & THEN

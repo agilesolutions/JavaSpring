@@ -1,6 +1,6 @@
 package com.agilesolutions.kafka.controller;
 
-import com.agilesolutions.dto.Share;
+import com.agilesolutions.dto.ShareDTO;
 import com.agilesolutions.kafka.service.KafkaShareService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +31,11 @@ public class KafkaShareController {
      */
     @GetMapping(produces = "application/json")
     @ResponseBody
-    List<Share> getAllShares() {
+    List<ShareDTO> getAllShares() {
         log.info("Get all shares");
         return shareService.getAllShares()
                 .stream()
-                .map(s -> Share.builder()
-                        .id(s.getId())
+                .map(s -> ShareDTO.builder()
                         .company(s.getCompany())
                         .Quantity(s.getQuantity())
                         .build())
