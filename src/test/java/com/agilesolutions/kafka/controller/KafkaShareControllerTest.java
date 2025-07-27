@@ -46,4 +46,26 @@ class KafkaShareControllerTest {
     }
 
 
+    @Test
+    public void givenInvalidRequest_whenIllegalArgumentExceptionThrown_thenReturnBadRequest() throws Exception {
+        // WHEN
+        Mockito.when(kafkaShareService.getAllShares()).thenThrow(new IllegalArgumentException("Invalid input"));
+
+        // THEN
+        mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid input"));
+    }
+
+    @Test
+    public void givenUnexpectedError_whenExceptionThrown_thenReturnInternalServerError() throws Exception {
+        // WHEN
+        Mockito.when(kafkaShareService.getAllShares()).thenThrow(new RuntimeException("Unexpected error"));
+
+        // THEN
+        mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("An unexpected error occurred"));
+    }
+
 }
