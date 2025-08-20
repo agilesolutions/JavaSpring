@@ -60,6 +60,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.retry:spring-retry'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.4'
     implementation 'org.apache.avro:trevni-avro:1.11.3'
     implementation 'io.confluent:kafka-avro-serializer:7.0.1'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
