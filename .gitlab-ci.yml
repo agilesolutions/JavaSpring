@@ -41,12 +41,14 @@ build-job:       # This job runs in the build stage, which runs first.
     paths:
       - build/libs/
 
-unit-test-job:   # This job runs in the test stage.
-  # Read https://stackoverflow.com/questions/61105333/cannot-connect-to-the-docker-daemon-at-tcp-localhost2375-is-the-docker-daem
-  # Read https://docs.localstack.cloud/aws/tutorials/gitlab-ci-testcontainers/
-  # This will run a Docker daemon in a container (Docker-In-Docker), which will
-  # be available at docker:2375. If you make e.g. port 5000 public in Docker
-  # (`docker run -p 5000:5000 yourimage`) it will be exposed at docker:5000.
+unit-tests:   # This job runs in the test stage.
+  stage: test
+  script:
+    - echo "Running unit tests... "
+    - gradle test
+
+integration-tests:   # This job runs in the test stage.
+  stage: test
   variables:
     DOCKER_HOST: tcp://docker:2375
     # Use the overlay fs driver for improved performance:
@@ -56,8 +58,9 @@ unit-test-job:   # This job runs in the test stage.
     TESTCONTAINERS_CHECKS_DISABLE: "true" # Optional, skips some startup checks
     GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   script:
-    - echo "Running unit tests... This will take about minutes because of test container setups."
-    - gradle test, integrationTest
+    - echo "Running integration tests..."
+    - gradle integrationTest
+
 
 docker-build:
   stage: docker
