@@ -35,8 +35,10 @@ If Auto DevOps is not already enabled for this project, you can [turn it on](htt
 gradle generateAvro
 gradle bootRun
 ```
-http://localhost:8080/jpa/shares
-http://localhost:8080/mongo/shares
+- http://localhost:8080/jpa/shares
+- http://localhost:8080/mongo/shares
+- http://localhost:8080/kafka/shares
+- http://localhost:8080/api/assets/stockPrices/AAPL
 
 ## GITLAB CI kubernetes deploy to public cluster
 
@@ -49,4 +51,12 @@ kubectl config view --minify --flatten > kubeconfig.yaml
 base64 kubeconfig.yaml
 ```
 
-
+## GITLAB CI kubernetes deploy to private cluster
+- The flux bootstrap gitlab command deploys the Flux controllers on a Kubernetes cluster and configures the controllers to sync the cluster state from a GitLab project.
+- Export your GITLAB PAT
+- Read [Run the bootstrap for a project on your personal GitLab account](https://fluxcd.io/flux/installation/bootstrap/gitlab/)
+- Read [Get started connecting a Kubernetes cluster to GitLab](https://docs.gitlab.com/user/clusters/agent/getting_started/)
+```
+export GITLAB_TOKEN=<gl-token>
+flux bootstrap gitlab --deploy-token-auth --owner=robertrong --repository=kotlinspring --branch=master --path=clusters/my-cluster  --personal
+```

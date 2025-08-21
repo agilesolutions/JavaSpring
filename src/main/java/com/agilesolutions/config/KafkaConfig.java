@@ -3,12 +3,7 @@ package com.agilesolutions.config;
 import com.agilesolutions.kafka.model.Share;
 import com.agilesolutions.kafka.serdes.AvroDeserializer;
 import com.agilesolutions.kafka.serdes.AvroSerializer;
-import com.agilesolutions.kafka.serdes.CustomKafkaAvroDeserializer;
-import com.agilesolutions.kafka.serdes.CustomKafkaAvroSerializer;
-import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -17,8 +12,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -119,5 +112,6 @@ public class KafkaConfig {
         return consumer;
 
     }
+
 
 }

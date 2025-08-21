@@ -8,8 +8,15 @@ import com.agilesolutions.rest.StockClient;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.client.ResourceAccessException;
+
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 
 @Service
 @Slf4j
@@ -24,6 +31,19 @@ public class StockService {
     private static final String MINUTE_INTERVAL = "1min";
     private static final String DAY_INTERVAL = "1day";
 
+    @Retryable(
+            retryFor = {
+                    ResourceAccessException.class,
+                    ConnectException.class,
+                    SocketTimeoutException.class
+            },
+            maxAttemptsExpression = "${service.retry.max-attempts}",
+            backoff = @Backoff(
+                    delayExpression = "${service.retry.initial-delay}",
+                    maxDelayExpression = "${service.retry.max-delay}",
+                    multiplierExpression = "${service.retry.multiplier}"
+            )
+    )
     public StockResponse getLatestStockPrices(@PathVariable String company) {
 
         log.info("Get stock prices for: {}", company);
@@ -33,5 +53,12 @@ public class StockService {
         return new StockResponse(Float.parseFloat(latestData.getClose()));
 
     }
+
+    @Recover
+    public String fallbackMethod(Exception exception, String url, Object request) {
+        log.error("All retry attempts failed for URL: {}", url, exception);
+        return "Stock price lookup failed after retries. Try later again...";
+    }
+
 
 }
