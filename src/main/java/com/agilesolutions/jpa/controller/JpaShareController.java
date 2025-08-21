@@ -1,15 +1,13 @@
 package com.agilesolutions.jpa.controller;
 
+import com.agilesolutions.exception.BusinessException;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.service.JpaShareService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 /**
  * Controller class for handling JPA share-related HTTP requests.
@@ -45,7 +43,7 @@ public class JpaShareController {
         log.info("Get share by ID: {}", id);
         return shareService.getShareById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Share with ID " + id + " not found"));
+                .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 
     /**
@@ -73,7 +71,7 @@ public class JpaShareController {
         log.info("Update share with ID: {}", id);
         return shareService.updateShare(id, share)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResourceNotFoundException("Share with ID " + id + " not found"));
+                .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 
     /**
@@ -88,7 +86,7 @@ public class JpaShareController {
         if (shareService.deleteShare(id)) {
             return ResponseEntity.noContent().build();
         } else {
-            throw new ResourceNotFoundException("Share with ID " + id + " not found");
+            throw new BusinessException("Share with ID " + id + " not found");
         }
     }
 }

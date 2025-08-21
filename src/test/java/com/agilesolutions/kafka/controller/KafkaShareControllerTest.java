@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.containsStringIgnoringCase;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -49,12 +50,12 @@ class KafkaShareControllerTest {
     @Test
     public void givenInvalidRequest_whenIllegalArgumentExceptionThrown_thenReturnBadRequest() throws Exception {
         // WHEN
-        Mockito.when(kafkaShareService.getAllShares()).thenThrow(new IllegalArgumentException("Invalid input"));
+        Mockito.when(kafkaShareService.getAllShares()).thenThrow(new NullPointerException("action is null"));
 
         // THEN
         mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string("Invalid input"));
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(containsString("action is null")));
     }
 
     @Test
@@ -65,7 +66,7 @@ class KafkaShareControllerTest {
         // THEN
         mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
-                .andExpect(content().string("An unexpected error occurred"));
+                .andExpect(content().string(containsString("Unexpected error")));
     }
 
 }

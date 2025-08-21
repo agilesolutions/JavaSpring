@@ -14,6 +14,10 @@ public class BusinessException extends RuntimeException {
     @Getter
     private List<Problem> problems = new ArrayList<>();
 
+    public BusinessException(String message) {
+        super(message);
+    }
+
     public BusinessException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * It verifies the behavior of the controller's HTTP endpoints by mocking the service layer.
  */
 @WebMvcTest(MongoDBShareController.class)
-class MongoDBShareControllerMockMvcTest {
+class MongoDBShareControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,8 +48,8 @@ class MongoDBShareControllerMockMvcTest {
         mockMvc.perform(get("/mongo/shares")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Share1"))
-                .andExpect(jsonPath("$[1].name").value("Share2"));
+                .andExpect(jsonPath("$[0].company").value("Share1"))
+                .andExpect(jsonPath("$[1].company").value("Share2"));
     }
 
     /**

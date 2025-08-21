@@ -1,11 +1,8 @@
 package com.agilesolutions.controller;
 
-import com.agilesolutions.config.ApplicationProperties;
-import com.agilesolutions.config.JunitConfig;
 import com.agilesolutions.dto.StockResponse;
 import com.agilesolutions.exception.CustomControllerAdvice;
 import com.agilesolutions.service.StockService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StockController.class)
-@ContextConfiguration(classes = {StockController.class, JunitConfig.class, ApplicationProperties.class, CustomControllerAdvice.class})
-@Disabled
+@ContextConfiguration(classes = {StockController.class, CustomControllerAdvice.class})
 class StockControllerTest {
 
     @Autowired
@@ -32,9 +28,6 @@ class StockControllerTest {
 
     @MockitoBean
     private StockService stockService;
-
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     @Test
     public void givenFinancialAssets_whenInquiringApple_thenReturnStockPricesForApple() throws Exception {
@@ -50,14 +43,13 @@ class StockControllerTest {
     }
 
     @Test
-    @Disabled
     public void givenResourceNotAvailable_whenGetSpecificException_thenTimeOut() throws Exception {
 
         // WHEN
         Mockito.when(stockService.getLatestStockPrices("NONE")).thenThrow(new IllegalStateException("Resource not Available"));
 
 
-        mockMvc.perform(get("/stockPrices/{company}", "NONE"))
+        mockMvc.perform(get("/api/assets/stockPrices/{company}", "NONE"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof IllegalStateException))
                 .andExpect(result -> assertEquals("Resource not Available", result.getResolvedException().getMessage()));
