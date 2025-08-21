@@ -9,7 +9,7 @@ plugins {
     id "com.github.davidmc24.gradle.plugin.avro" version '1.9.1'
 }
 
-group = 'com.agilesolutions.practises'
+group = 'com.agilesolutions.spring'
 version = '1.0.0'
 
 java {

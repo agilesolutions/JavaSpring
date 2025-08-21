@@ -88,18 +88,18 @@ This will compile the code, run tests, and create a JAR file in the `build/libs`
 ### Run the application
 You can run the application using the following command:
 ```bash
-java -jar build/libs/kotlinspring-0.0.1-SNAPSHOT.jar
+java -jar build/libs/application-1.0.0.jar
 ```
 ## Docker
 ### Build the Docker image
 You can build the Docker image using the following command:
 ```bash
-docker build -t kotlinspring:latest -f docker/Dockerfile .
+docker build -t allinone:latest -f docker/Dockerfile .
 ``` 
 ### Run the Docker container
 You can run the Docker container using the following command:
 ```bash
-docker run -p 8080:8080 kotlinspring:latest
+docker run -p 8080:8080 allinone:latest
 ```
 ## Gradle Tasks
 - `generateAvro`: Generates Avro classes from the Avro schema files.
