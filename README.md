@@ -162,7 +162,7 @@ For any questions or inquiries, please contact the project maintainer at robert.
 
 ## Acknowledgements
 This project is inspired by various open-source projects and tutorials. Special thanks to the Spring Boot community for their contributions and support.
-```
+
 ## References
 - [Spring Boot Documentation](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/)
 - [GitLab CI/CD Documentation](https://docs.gitlab.com/ee/ci/)
