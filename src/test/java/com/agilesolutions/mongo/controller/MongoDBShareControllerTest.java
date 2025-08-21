@@ -1,12 +1,14 @@
 package com.agilesolutions.mongo.controller;
 
 import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.exception.CustomControllerAdvice;
 import com.agilesolutions.mongo.service.MongoDBShareService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * It verifies the behavior of the controller's HTTP endpoints by mocking the service layer.
  */
 @WebMvcTest(MongoDBShareController.class)
+@ContextConfiguration(classes = {MongoDBShareController.class, CustomControllerAdvice.class})
 class MongoDBShareControllerTest {
 
     @Autowired
