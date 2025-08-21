@@ -1,7 +1,9 @@
 package com.agilesolutions.config;
 
+import com.agilesolutions.kafka.model.Share;
 import com.agilesolutions.kafka.service.KafkaShareService;
 import com.agilesolutions.service.StockService;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,9 @@ public class JunitConfig implements WebMvcConfigurer {
     public KafkaShareService kafkaShareService() {
         return Mockito.mock(KafkaShareService.class);
     }
+
+    @Bean
+    public Consumer<String, Share> consumer() {return Mockito.mock(Consumer.class);}
 
 
 }

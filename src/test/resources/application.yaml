@@ -1,25 +1,44 @@
 spring:
+  application:
+    name: allinone
   datasource:
-    type: com.zaxxer.hikari.HikariDatasoure
-    driverClassName: org.postgresql.Driver
-    jdbcUrl: jdbc:psotgresql://com.rong:5432/portfolio?ApplicationName=PortfolioService&currentSchema=portfolio
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
-    platform: postgresql
+    DriverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5438/shares
+    username: postgres
+    password: postgres
     hikari:
-      connection-timeout: 30000
-      max-pool-size: 10
-      minimum-idle: 0
-      idleTimeout: 10000
-      max-lifetime: 180000
-  flyway:
-    enabled: true
-    outOfOrder: true
-    ignoreFutureMigrations: true
-    locations: classpath:/db/flyway/postgres
-    url: jdbc:h2:mem:database
-    user: databaseUser
-    password: databasePassword
+      # If you’re seeing connection closed exceptions with a Spring Boot + HikariCP + PostgreSQL setup, it usually means that Hikari is handing out connections that the database has already closed—often due to database timeouts, idle connection limits, or network interruptions.
+      # The “optimum” settings aren’t one-size-fits-all—they depend on your database’s configuration, workload, and infrastructure
+      # This is a tested baseline configuration that fixes the closed-connection issue in most PostgreSQL deployments.
+      # Core Pool Size
+      pool-name: course-service-pool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      # Connection lifetime & idle handling
+      idle-timeout: 300000       # 5 minutes
+      max-lifetime: 1800000      # 30 minutes
+      # Connection validation
+      connection-test-query: SELECT 1
+      validation-timeout: 5000   # 5 seconds
+
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop #this recreates the db, not recommended for prod
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  data:
+    mongodb:
+      database: test
+      port: 27017
+
+
 
 twelvedata:
   api:

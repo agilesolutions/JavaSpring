@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import java.util.List;
 
@@ -18,12 +20,16 @@ class KafkaShareServiceTest {
     @Mock
     private Consumer<String, Share> consumer;
 
+    @Mock
     private KafkaShareService kafkaShareService;
+
+    @Autowired
+    private KafkaTemplate<String, Share> kafkaTemplate;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        kafkaShareService = new KafkaShareService(consumer);
+        kafkaShareService = new KafkaShareService(consumer, kafkaTemplate);
     }
 
     @Test

@@ -6,10 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -20,6 +23,8 @@ public class KafkaShareService {
     @Autowired
     private final Consumer<String, Share> consumer;
 
+    @Autowired
+    private KafkaTemplate<String, Share> kafkaTemplate;
 
 
     public List<Share> getAllShares() {
@@ -55,4 +60,9 @@ public class KafkaShareService {
 
     }
 
+    public void sendShare(Share share) {
+        log.info("Sending Share: {}", share);
+        CompletableFuture<SendResult<String, Share>> future = kafkaTemplate.send("default", null, share);
+
+    }
 }
