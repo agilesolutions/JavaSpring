@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allinone
+  namespace: default
+  labels:
+    app: allinone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allinone
+  template:
+    metadata:
+      labels:
+        app: allinone
+    spec:
+      containers:
+        - name: allinone
+          image: allinone
+          ports:
+            - containerPort: 80
