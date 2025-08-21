@@ -1,4 +1,4 @@
-package com.agilesolutions.jpa.base;
+package com.agilesolutions.mongo.base;
 
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

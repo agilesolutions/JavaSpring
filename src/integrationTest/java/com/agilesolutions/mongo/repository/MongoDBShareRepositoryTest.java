@@ -1,6 +1,6 @@
 package com.agilesolutions.mongo.repository;
 
-import com.agilesolutions.jpa.base.BaseMongoDBIntegrationTest;
+import com.agilesolutions.mongo.base.BaseMongoDBIntegrationTest;
 import com.agilesolutions.mongo.model.Share;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
