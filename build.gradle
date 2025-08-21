@@ -98,6 +98,64 @@ test {
     useJUnitPlatform()
 }
 
+// Define a new source set for integration tests
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+            srcDir file("src/integrationTest/java")
+        }
+        resources.srcDir file("src/integrationTest/resources")
+    }
+}
+
+// Configurations for integration tests (so dependencies resolve correctly)
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+// Define the integrationTest task
+task integrationTest(type: Test) {
+    description = "Runs the integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    shouldRunAfter test
+    useJUnitPlatform()
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+
+    testLogging {
+        // Show standard out/err from the tests
+        showStandardStreams = true
+
+        // Events to log
+        events "passed", "skipped", "failed"
+
+        // Log exception details
+        exceptionFormat "full" // options: short, full
+
+        // Granularity of logging
+        displayGranularity = 2 // show nested test classes/methods nicely
+    }
+
+    // Optional: print summary after execution
+    afterSuite { desc, result ->
+        if (!desc.parent) { // will match the outermost suite
+            println "\n--------------------------------------------------"
+            println "Test Results: ${result.resultType}"
+            println "Tests run: ${result.testCount}, Passed: ${result.successfulTestCount}, Failed: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}"
+            println "--------------------------------------------------"
+        }
+    }
+}
+
 String commit() {
     return 'git rev-parse HEAD'.execute().text.trim()
 }
