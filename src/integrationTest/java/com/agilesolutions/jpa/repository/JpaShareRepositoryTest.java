@@ -1,6 +1,6 @@
 package com.agilesolutions.jpa.repository;
 
-import com.agilesolutions.jpa.base.BaseIntegrationTest;
+import com.agilesolutions.jpa.base.BasePGIntegrationTest;
 import com.agilesolutions.jpa.model.Share;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 
-class JpaShareRepositoryTest extends BaseIntegrationTest {
+class JpaShareRepositoryTest extends BasePGIntegrationTest {
 
     @Autowired
     private JpaShareRepository shareRepository;
@@ -33,5 +33,12 @@ class JpaShareRepositoryTest extends BaseIntegrationTest {
 
     @Test
     void findByPublishedDateAfter() {
+
+        LocalDate date = LocalDate.now().minusDays(1);
+        shareRepository.save(new Share(null, "company2", 2, date));
+
+        shareRepository.findByPublishedDateAfter(date).stream().forEach(c -> Assert.assertTrue(c.getUpdated().isAfter(date)));
+
     }
+
 }

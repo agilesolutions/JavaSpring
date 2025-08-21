@@ -33,6 +33,12 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  data:
+    mongodb:
+      database: test
+      port: 27017
+
+
 
 twelvedata:
   api:

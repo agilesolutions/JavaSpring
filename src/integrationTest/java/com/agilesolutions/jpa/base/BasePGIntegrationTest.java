@@ -12,7 +12,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class BaseIntegrationTest {
+public class BasePGIntegrationTest {
     static int containerPort = 5432;
     static int localPort = 5432;
 
