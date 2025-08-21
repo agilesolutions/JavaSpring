@@ -6,12 +6,15 @@ import org.springframework.boot.test.context.ConfigDataApplicationContextInitial
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 @SpringJUnitConfig(classes = {KafkaShareService.class, KafkaConfig.class}, initializers = {ConfigDataApplicationContextInitializer.class})
 public class BaseKafkaIntegrationTest {
 
     @ServiceConnection
-    public static KafkaContainer  kafkaContainer = new KafkaContainer("confluentinc/cp-kafka:7.7.1");
+    public static KafkaContainer  kafkaContainer = new KafkaContainer(
+            DockerImageName.parse("confluentinc/cp-kafka:7.6.1")
+    );
 
     static {
         kafkaContainer.start();
