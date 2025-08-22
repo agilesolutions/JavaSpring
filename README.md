@@ -14,7 +14,7 @@ Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End
 - DevOps pipeline for CI/CD
 
 ## Prerequisites
-- Java 17 or higher
+- Java 21 or higher
 - Gradle 7.0 or higher
 - Docker
 - Kubernetes cluster (public or private)
