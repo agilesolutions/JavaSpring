@@ -1,5 +1,5 @@
 # ShowCase project for Spring Boot with GitLab CI/CD 
-Demonstrating how to build a Spring Boot application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
+Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End REST-Full application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
 ## Features
 - Spring Boot application with JPA and MongoDB
 - Kafka producer and consumer
@@ -175,35 +175,16 @@ This project is inspired by various open-source projects and tutorials. Special 
 - [Prometheus Documentation](https://prometheus.io/docs/introduction/overview/)
 - [Grafana Documentation](https://grafana.com/docs/)
 - [ELK Stack Documentation](https://www.elastic.co/what-is/elk-stack)
-- [Spring Security Documentation](https://docs.spring.io/spring-security/site/docs/current/reference/html/)
-- [Spring Data JPA Documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
-- [Spring Data MongoDB Documentation](https://docs.spring.io/spring-data/mongodb/docs/current/reference/html/)
-- [Spring Kafka Documentation](https://docs.spring.io/spring-kafka/docs/current/reference/html/)
-- [Spring Boot Actuator Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Spring Boot DevTools Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.devtools)
-- [Spring Boot Test Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html)
-- [Spring Boot Starter Web Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html)
-- [Spring Boot Starter Security Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-security.html)
-- [Spring Boot Starter Data JPA Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jpa.html)
-- [Spring Boot Starter Data MongoDB Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-mongodb.html)
-- [Spring Boot Starter Kafka Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kafka.html)
-- [Spring Boot Starter Actuator Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Spring Boot Starter DevTools Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.devtools)
-- [Spring Boot Starter Test Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html)
-- [Spring Boot Starter Web Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html)
-- [Spring Boot Starter Security Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-security.html)
-- [Spring Boot Starter Data JPA Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jpa.html)
-- [Spring Boot Starter Data MongoDB Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-mongodb.html)
-- [Spring Boot Starter Kafka Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kafka.html)
-- [Spring Boot Starter Actuator Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
-- [Spring Boot Starter DevTools Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/using.html#using.devtools)
-- [Spring Boot Starter Test Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html)
-- [Spring Boot Starter Web Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html)
-- [Spring Boot Starter Security Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-security.html)
-- [Spring Boot Starter Data JPA Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-jpa.html)
-- [Spring Boot Starter Data MongoDB Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-mongodb.html)
-- [Spring Boot Starter Kafka Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-kafka.html)
-
+- [Spring REST Dos](https://spring.io/projects/spring-restdocs)
+- [Spring Security Documentation](https://spring.io/projects/spring-security)
+- [Spring Data JPA Documentation](https://spring.io/projects/spring-data-jpa)
+- [Spring Data MongoDB Documentation](https://spring.io/projects/spring-data-mongodb)
+- [Spring Kafka Documentation](https://spring.io/projects/spring-kafka)
+- [Spring Boot Actuator Documentation](https://docs.spring.io/spring-boot/api/rest/actuator/index.html)
+- [Spring Boot DevTools Documentation](https://docs.spring.io/spring-boot/reference/using/devtools.html)
+- [Spring Boot Test Documentation](https://docs.spring.io/spring-boot/reference/testing/index.html)
+- [Spring Boot Starter Web Documentation](https://docs.spring.io/spring-boot/reference/web/servlet.html)
+- [Spring Boot Holistic Project overview](https://spring.io/projects/spring-boot)
 
 
 
