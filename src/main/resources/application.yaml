@@ -26,6 +26,14 @@ spring:
     consumer:
       auto-offset-reset: earliest
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
 logging:
   level:
     root: INFO
@@ -36,6 +44,13 @@ logging:
 auto:
   register:
     schema: false
+
+service:
+  retry:
+    initial_delay: 1000
+    max-delay: 5000
+    multiplier: 2.0
+    max-attempts: 3
 
 management:
   tracing:
