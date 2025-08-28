@@ -1,5 +1,9 @@
 # ShowCase project for Spring Boot with GitLab CI/CD 
 Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End REST-Full application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
+
+```
+Note: This service is implemented as a Spring Boot monolith to demonstrate cross-cutting Spring Framework features such as security, scalability, service integration, and more. The design choices are intentional for this context and are not intended to represent microservices best practices.
+```
 ## Features
 - Spring Boot application with JPA and MongoDB
 - Kafka producer and consumer
@@ -23,45 +27,55 @@ Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End
 ## Project Structure
 ```
 kotlinspring/
-├── build.gradle.kts
-├── settings.gradle.kts
+├── build.gradle
+├── settings.gradle
 ├── src/
 │   ├── main/
 │   │   ├── java/
 │   │   │   └── com/agilesolutions/
 │   │   │       ├── AllInOneApplication.java     
+│   │   │       ├── actuator/
+│   │   │       │   ├── CustomHealthCheck.java
+│   │   │       │   ├── CustomMongoHealthInducator.java  
+│   │   │       │   └── HealthService.java        
 │   │   │       ├── config/
+│   │   │       │   ├── ApplicationProperties.java
 │   │   │       │   ├── KafkaConfig.java
-│   │   │       │   ├── MongoConfig.java  
+│   │   │       │   ├── MongoDBConfig.java  
+│   │   │       │   ├── MvcConfig.java  
 │   │   │       │   └── RestConfig.java        
 │   │   │       ├── controller/
-│   │   │       │   └── StockController.kt
-│   │   │       ├── model/
-│   │   │       │   └── StockData.kt
+│   │   │       │   └── StockControllerjava
 │   │   │       ├── dto/
-│   │   │       │   ├── ShareDto.kt
-│   │   │       │   └── StockResponse.kt
+│   │   │       │   ├── ShareDto.java
+│   │   │       │   └── StockResponse.java
 │   │   │       ├── exception/
 │   │   │       │   ├── BusinessException.java
-│   │   │       │   ├── CustomontrollerAdvice.kt
-│   │   │       │   └── Problem.kt
+│   │   │       │   ├── CustomontrollerAdvice.java
+│   │   │       │   └── Problemjava
+│   │   │       ├── init/
+│   │   │       │   ├── KafkaInitializer.java
+│   │   │       │   └── MongoDBInitializer.java
+│   │   │       ├── jpa/
+│   │   │       │   └── JPA packages and components...
 │   │   │       ├── kafka/
-│   │   │       │   ├── KafkaProducer.kt
-│   │   │       │   └── KafkaConsumer.kt
-│   │   │       ├── repository/
-│   │   │       │   ├── AssetRepository.kt
-│   │   │       │   ├── ShareRepository.kt
-│   │   │       │   └── StockPriceRepository.kt
-│   │   │       ├── service/
-│   │   │       │   ├── AssetService.kt
-│   │   │       │   ├── ShareService.kt
-│   │   │       │   └── StockPriceService.kt
-│   │   │       └── util/
-│   │   │           └── AssetMapper.kt
+│   │   │       │   └── Kafka packages and components...
+│   │   │       ├── model/
+│   │   │       │   └── StockData.java
+│   │   │       ├── mongo/
+│   │   │       │   └── MongoDB packages and components...
+│   │   │       ├── mvc/
+│   │   │       │   ├── AvroDeserelizer.java
+│   │   │       │   └── AvroSerializer.java
+│   │   │       ├── rest/
+│   │   │       │   └── StockClient.java
+│   │   │       └── service/
+│   │   │           └── StockService.java
 │   │   └── resources/
-│   │       ├── application.yml
-│   │       ├── static/
-│   │       └── templates/
+│   │   ├── rest/
+│   │       └── share.avsc -- Avro schema
+│   │   ├── application.yml
+│   │   └── data.yml -- initial load scripts
 ├── docker/
 │   └── Dockerfile
 ├── helm/
@@ -81,7 +95,8 @@ kotlinspring/
 ```
 ## Build and Run the Application
 ### Build the application
-```gradle build
+```
+gradle build
 ```
 This will compile the code, run tests, and create a JAR file in the `build/libs` directory.
 
@@ -106,6 +121,7 @@ docker run -p 8080:8080 allinone:latest
 - `bootRun`: Runs the Spring Boot application.
 - `build`: Builds the application and creates a JAR file.
 - `test`: Runs the tests.
+- `integrationTest`: Runs the integration tests with PostgreSQL, MongoDB and Kafka test containers
 - `docker`: Builds the Docker image.
 - `helm`: Packages the application using Helm.
 - `kustomize`: Customizes the Kubernetes manifests using Kustomize.
