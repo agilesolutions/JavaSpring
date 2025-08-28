@@ -2,12 +2,9 @@ package com.agilesolutions.config;
 
 import com.agilesolutions.actuator.CustomMongoHealthIndicator;
 import com.agilesolutions.mongo.repository.MongoDBShareRepository;
-import com.mongodb.client.MongoClient;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import io.micrometer.observation.ObservationRegistry;
-import org.springframework.boot.actuate.data.mongo.MongoHealthIndicator;
-import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

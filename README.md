@@ -1,5 +1,9 @@
 # ShowCase project for Spring Boot with GitLab CI/CD 
 Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End REST-Full application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
+
+```
+Note: This service is implemented as a Spring Boot monolith to demonstrate cross-cutting Spring Framework features such as security, scalability, service integration, and more. The design choices are intentional for this context and are not intended to represent microservices best practices.
+```
 ## Features
 - Spring Boot application with JPA and MongoDB
 - Kafka producer and consumer
