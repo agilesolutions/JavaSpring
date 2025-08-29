@@ -164,6 +164,43 @@ You can access the application using the following URLs:
 - Kibana: [http://localhost:5601](http://localhost:5601) (default username: elastic, password: changeme)
 - Elasticsearch: [http://localhost:9200](http://localhost:9200) (default username: elastic, password: changeme)
 
+## Security
+This application is setup to securing and authorizing REST endpoints using Spring Security with Oauth2 and JWT. This application combines Authorization server, Resource Sever and Client Appication in one single application. Method level security is implemented using `@PreAuthorize` annotations. 
+1. **Authorization Server** - Issues and validates OAuth2 tokens
+2. **Resource Server** - Hosts protected resources requiring OAuth2 authentication
+3. **Client Application** - Makes authenticated requests using OAuth2 tokens
+
+### Architecture
+This is depicting a typical OIDC Authorization Code Flow. 
+1. The client requests an access token from the Authorization Serve
+2. The Authorization Server validates credentials and returns a token
+3. The client includes this token when requesting protected resources
+4. The Resource Server validates the token before serving the request
+
+<img title="OIDC Authorization Code Flow" alt="Alt text" src="/images/oauth2_architecture.png">
+
+
+### Security Testing
+You can test the security of the application using [HTTPie CLI](https://github.com/httpie/cli) tool. First, obtain an access token using the following command:
+```bash
+http --form POST http://localhost:8080/oauth/token grant_type=password client_id=clientapp client_secret secret username=user password=password
+```
+This will return a JSON response with the access token. You can then use the access token to access the secured endpoints. For example:
+```bash
+http --offline GET http://localhost:8080/api/jpa/shares -A bearer -a "b453919a139448c5891eadeb14bf1080a2624b03" 
+```
+
+This application provides two sets of endpoints:
+- Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
+- Secured endpoints: `/api/**` - require authentication and authorization Authorization: Bearer <access_token>
+
+        
+    
+    
+    
+
+
+
 ## Monitoring and Logging
 The application is integrated with Prometheus and Grafana for monitoring, and Elasticsearch, Logstash, and Kibana (ELK stack) for logging. You can access the monitoring and logging dashboards using the following URLs:
 - Prometheus: [http://localhost:9090](http://localhost:9090)

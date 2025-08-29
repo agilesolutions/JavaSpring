@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/kafka/shares")
+@RequestMapping("/api/kafka/shares")
 public class KafkaShareController {
 
     private final KafkaShareService shareService;

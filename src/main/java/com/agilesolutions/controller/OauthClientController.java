@@ -1,0 +1,42 @@
+package com.agilesolutions.controller;
+
+import com.agilesolutions.dto.ShareDTO;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClient;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.springframework.security.oauth2.client.web.client.RequestAttributeClientRegistrationIdResolver.clientRegistrationId;
+
+@Log4j2
+@AllArgsConstructor
+@RestController
+@RequestMapping("/oauthClient")
+public class OauthClientController {
+
+    private final RestClient restClient;
+
+    @GetMapping("/shares")
+    public ResponseEntity<List<ShareDTO>> messages() {
+        ShareDTO[] shares = this.restClient.get()
+                .uri("http://localhost:8080//api/jpa/shares")
+                .attributes(clientRegistrationId("oauthclient"))
+                .retrieve()
+                .body(ShareDTO[].class);
+
+        return ResponseEntity.ok(Arrays.asList(shares));
+    }
+
+
+
+
+
+
+
+}
