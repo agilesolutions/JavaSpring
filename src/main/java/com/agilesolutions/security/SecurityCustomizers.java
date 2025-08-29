@@ -5,7 +5,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
@@ -54,8 +53,5 @@ public class SecurityCustomizers {
                     .contentSecurityPolicy(cspCustomizer)
                     .httpStrictTransportSecurity(hstsConfig -> hstsConfig.maxAgeInSeconds(31536000).includeSubDomains(true).preload(false));
 
-
-
-    public static final Customizer<OAuth2ResourceServerConfigurer<HttpSecurity>.JwtConfigurer> jwtConfigurerCustomizer = configurer -> new JwtConfigurer();
 
 }

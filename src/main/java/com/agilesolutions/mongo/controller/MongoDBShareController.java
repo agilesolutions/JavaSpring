@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/mongo/shares")
+@RequestMapping("/api/mongo/shares")
 public class MongoDBShareController {
 
     private final MongoDBShareService shareService;

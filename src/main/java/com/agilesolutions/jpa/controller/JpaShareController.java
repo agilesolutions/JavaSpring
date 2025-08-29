@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/jpa/shares")
+@RequestMapping("/api/jpa/shares")
 public class JpaShareController {
 
     private final JpaShareService shareService;
