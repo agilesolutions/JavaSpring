@@ -1,5 +1,6 @@
 # ShowCase project for Spring Boot with GitLab CI/CD 
 Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End REST-Full application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
+This application is set up with a WireMock server to mock Keycloak for testing Oauth2 login flows. This setup makes the application believe it is interacting with a real Keycloak OIDC Idp server during runtime. 
 
 ```
 Note: This service is implemented as a Spring Boot monolith to demonstrate cross-cutting Spring Framework features such as security, scalability, service integration, and more. The design choices are intentional for this context and are not intended to represent microservices best practices.
