@@ -1,5 +1,6 @@
 package com.agilesolutions.jpa.controller;
 
+import com.agilesolutions.dto.ShareDTO;
 import com.agilesolutions.exception.BusinessException;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.service.JpaShareService;
@@ -26,8 +27,8 @@ public class JpaShareController {
      *
      * @return an iterable collection of Share objects.
      */
-    @GetMapping
-    public Iterable<Share> getAllShares() {
+    @GetMapping(produces = "application/json")
+    public Iterable<ShareDTO> getAllShares() {
         log.info("Get all shares");
         return shareService.getAllShares();
     }

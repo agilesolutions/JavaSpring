@@ -1,54 +1,44 @@
 package com.agilesolutions.controller;
 
+import com.agilesolutions.dto.ShareDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.ui.Model;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.client.RestClient;
 
-import java.util.Map;
+import java.util.List;
+
+import static org.springframework.security.oauth2.client.web.client.RequestAttributeClientRegistrationIdResolver.clientRegistrationId;
 
 @Log4j2
 @AllArgsConstructor
 @RestController
-@RequestMapping("/oauthClient")
+@RequestMapping("/oauth-client")
 public class OauthClientController {
 
-    //private final RestClient restClient;
+    private final RestClient restClient;
 
-    /*
     @GetMapping("/shares")
     public ResponseEntity<List<ShareDTO>> messages() {
-        ShareDTO[] shares = this.restClient.get()
-                .uri("http://localhost:8080//api/jpa/shares")
-                .attributes(clientRegistrationId("oauthclient"))
+        List<ShareDTO> shares = this.restClient.get()
+                .uri("http://localhost:8080/api/jpa/shares")
+                .accept(MediaType.APPLICATION_JSON)
+                .attributes(clientRegistrationId("my-client"))
                 .retrieve()
-                .body(ShareDTO[].class);
+                .body(new ParameterizedTypeReference<>() {});
 
-        return ResponseEntity.ok(Arrays.asList(shares));
+        return ResponseEntity.ok(shares);
     }
-     */
 
     @GetMapping("/")
-    public ModelAndView getUserInfoPage(@AuthenticationPrincipal OAuth2User user) {
-        ModelAndView modelAndView = new ModelAndView("userinfo");
-        modelAndView.addObject("user", Map.of(
-                "email", user.getAttribute("email"),
-                "id", user.getAttribute("sub")
-        ));
-
-        return modelAndView;
+    public String get() {
+        return "Login Success";
     }
-
-    @GetMapping("/login")
-    public String getSsoPage(Model model) {
-        return "login";
-    }
-
 
 
 

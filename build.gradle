@@ -84,12 +84,15 @@ dependencies {
 
     // security setups
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'com.nimbusds:nimbus-jose-jwt:10.4.2'
+
 
     // keycloak wiremock setups
+    implementation 'org.springframework.boot:spring-boot-starter-mustache'
     standalone 'org.wiremock:wiremock-standalone:3.10.0'
     standalone 'org.wiremock.extensions:wiremock-jwt-extension-standalone:0.2.0'
 

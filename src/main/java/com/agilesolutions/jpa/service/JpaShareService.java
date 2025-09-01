@@ -1,7 +1,9 @@
 package com.agilesolutions.jpa.service;
 
+import com.agilesolutions.dto.ShareDTO;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.repository.JpaShareRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +27,9 @@ public class JpaShareService {
      *
      * @return a list of all Share entities
      */
-    public List<Share> getAllShares() {
-        return (List<Share>) shareRepository.findAll();
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<ShareDTO> getAllShares() {
+        return ((List<Share>) shareRepository.findAll()).stream().map(c -> new ShareDTO(c.getCompany(), c.getQuantity())).toList();
     }
 
     /**
