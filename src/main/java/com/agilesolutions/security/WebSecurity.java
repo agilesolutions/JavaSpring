@@ -1,186 +1,150 @@
 package com.agilesolutions.security;
 
-import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.MediaType;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.UUID;
-
-import static com.agilesolutions.security.SecurityCustomizers.*;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+@AllArgsConstructor
 public class WebSecurity {
 
-    private static final String[] WHITLIST = {"/healthCheck","actuator", "/swagger-ui.html", "/oauth"};
-    private final static String GATEWAY_CLIENT_ID = "oauthclient";
-    private final static String GATEWAY_CLIENT_HOST_URL = "http://localhost:8080";
+    private static final String[] WHITLIST = {"/healthCheck","actuator", "/swagger-ui.html"};
 
     @Bean
-    @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-            throws Exception {
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-                OAuth2AuthorizationServerConfigurer.authorizationServer();
-
-        http
-                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-                .with(authorizationServerConfigurer, authorizationServer -> authorizationServer.oidc(Customizer.withDefaults())) // OIDC 1.0
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
-                .exceptionHandling((exceptions) -> exceptions
-                        .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .cors(c -> c.disable())
+                .csrf(c -> c.disable())
+                .authorizeHttpRequests(a ->
+                        a.requestMatchers(
+                                        new AntPathRequestMatcher("/login"),
+                                        new AntPathRequestMatcher("/oauth2/**"),
+                                        new AntPathRequestMatcher("/openid-connect"),
+                                        new AntPathRequestMatcher("/error"),
+                                        new AntPathRequestMatcher("/css/**"),
+                                        new AntPathRequestMatcher("/js/**"),
+                                        new AntPathRequestMatcher("/images/**"),
+                                        new AntPathRequestMatcher("/actuator/**"),
+                                        new AntPathRequestMatcher("/v3/api-docs/**"),
+                                        new AntPathRequestMatcher("/swagger-ui/**"),
+                                        new AntPathRequestMatcher("/.well-known/**"),
+                                        new AntPathRequestMatcher("/oauth-client/**"),
+                                        new AntPathRequestMatcher("/assets/**"))
+                                .permitAll()
+                                .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .decoder(jwtDecoder())
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 )
-                // Accept access tokens for User Info and/or Client Registration
-                .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()));
+                //.oauth2Login(customizer -> customizer.successHandler(successHandler()))
+                .build();
+    }
 
-        return http.build();
+    /**
+     * Map custom JWT claims into Spring Security authorities.
+     * Example: "roles": ["admin", "user"] -> ROLE_ADMIN, ROLE_USER
+     */
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(this::extractAuthoritiesFromJwt);
+        return converter;
+    }
+    private Collection<GrantedAuthority> extractAuthoritiesFromJwt(Jwt jwt) {
+        // Map "roles" claim to ROLE_* authorities
+        Collection<String> roles = jwt.getClaimAsStringList("roles");
+        if (roles == null) {
+            roles = java.util.Collections.emptyList();
+        }
+        return roles.stream()
+                .map(role -> "ROLE_" + role.toUpperCase())
+                .map(org.springframework.security.core.authority.SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain jwtFilterChain(HttpSecurity http)
-            throws Exception {
-        // chain would be invoked only for paths that start with /api/
-        http.securityMatcher("/api/**")
-                .authorizeHttpRequests((authorize) ->
-                        authorize
-                                .requestMatchers("/api/test/unprotected").permitAll()
-                                .anyRequest().authenticated()
-                )
-                // Ignoring session cookie
-                .sessionManagement(configurer ->
-                        configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()))
-                // disabling csrf tokens for the sake of the example
-                .csrf(AbstractHttpConfigurer::disable);
-
-        return http.build();
+    public JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withJwkSetUri("http://localhost:8080/.well-known/jwks.json").build();
     }
 
-    @Order(3)
-    @Bean
-    public SecurityFilterChain publicEndpoints(HttpSecurity http) throws Exception {
-
-        http.securityMatcher(WHITLIST)
-                .csrf(csrfCustomizer)
-                .cors(corsCustomizer)
-                .headers(headersCustomizer)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(("/swagger-ui.html")).permitAll()
-                        .requestMatchers(("/swagger-ui/**")).permitAll()
-                        .requestMatchers(("/v3/api-docs/**")).permitAll()
-                        .requestMatchers(("/actuator/**")).permitAll()
-                        .requestMatchers(("/oauth/**")).permitAll()
-                        .requestMatchers(("/healthCheck")).permitAll()
-                        .anyRequest().permitAll());
-
-        return http.build();
 
 
+    public AuthenticationSuccessHandler successHandler() {
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("/");
+        return handler;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
+    //@Bean
+    public InMemoryClientRegistrationRepository clientRegistrations() {
+        ClientRegistration clientRegistration = ClientRegistration
+                .withRegistrationId("my-client")
+                .tokenUri("https://auth-server.com/oauth2/token")
+                .clientId("my-client-id")
+                .clientSecret("my-client-secret")
+                .authorizationGrantType(org.springframework.security.oauth2.core.AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .build();
 
-        return new InMemoryUserDetailsManager(userDetails);
-    }
-
-
-    @Bean
-    public RegisteredClientRepository registeredClientRepository() {
-        return new InMemoryRegisteredClientRepository(RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId(GATEWAY_CLIENT_ID)
-                .clientSecret("secret")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri(GATEWAY_CLIENT_HOST_URL + "/login/oauth2/code/" + GATEWAY_CLIENT_ID)
-                .postLogoutRedirectUri("http://localhost:8080/logout")
-                .scope(OidcScopes.OPENID)
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                .build());
+        return new InMemoryClientRegistrationRepository(clientRegistration);
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        KeyPair keyPair = generateRsaKey();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        RSAKey rsaKey = new RSAKey.Builder(publicKey)
-                .privateKey(privateKey)
-                .keyID(UUID.randomUUID().toString())
-                .build();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return new ImmutableJWKSet<>(jwkSet);
-    }
-
-    private static KeyPair generateRsaKey() {
-        KeyPair keyPair;
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
-        }
-        catch (Exception ex) {
-            throw new IllegalStateException(ex);
-        }
-        return keyPair;
+    public OAuth2AuthorizedClientService authorizedClientService(
+            ClientRegistrationRepository clientRegistrationRepository) {
+        return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository);
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    public OAuth2AuthorizedClientManager authorizedClientManager(
+            ClientRegistrationRepository clientRegistrationRepository,
+            OAuth2AuthorizedClientService authorizedClientService) {
+        var authorizedClientProvider =
+                OAuth2AuthorizedClientProviderBuilder
+                        .builder()
+                        .clientCredentials()
+                        .build();
+
+        var clientManager = new AuthorizedClientServiceOAuth2AuthorizedClientManager(
+                clientRegistrationRepository,
+                authorizedClientService
+        );
+
+        clientManager.setAuthorizedClientProvider(authorizedClientProvider);
+
+        return clientManager;
     }
 
+
+
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+    public RSAKey rsaKey() throws Exception {
+        return new RSAKeyGenerator(2048)
+                .keyID("test-key-id")
+                .generate();
     }
 
 }

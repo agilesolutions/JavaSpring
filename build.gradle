@@ -21,6 +21,11 @@ java {
 
 }
 
+configurations {
+    standalone
+}
+
+
 ext {
     commit = commit()
     branchName = branchName()
@@ -53,6 +58,7 @@ dependencies {
     implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-M7")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.kafka:spring-kafka'
@@ -78,8 +84,17 @@ dependencies {
 
     // security setups
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    //implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
+    implementation 'com.nimbusds:nimbus-jose-jwt:10.4.2'
+
+
+    // keycloak wiremock setups
+    implementation 'org.springframework.boot:spring-boot-starter-mustache'
+    standalone 'org.wiremock:wiremock-standalone:3.10.0'
+    standalone 'org.wiremock.extensions:wiremock-jwt-extension-standalone:0.2.0'
 
     // swagger ui for testing
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
@@ -126,6 +141,12 @@ sourceSets {
 configurations {
     integrationTestImplementation.extendsFrom testImplementation
     integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+task runMocks(type: JavaExec) {
+    mainClass = 'wiremock.Run'
+    classpath = configurations.standalone
+    args = ['--port', '9988', '--root-dir', 'wiremock-oauth2']
 }
 
 // Define the integrationTest task

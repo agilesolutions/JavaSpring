@@ -1,5 +1,6 @@
 package com.agilesolutions.jpa.controller;
 
+import com.agilesolutions.dto.ShareDTO;
 import com.agilesolutions.exception.BusinessException;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.service.JpaShareService;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,13 +23,21 @@ public class JpaShareController {
 
     private final JpaShareService shareService;
 
+    @GetMapping("/healthCheck")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String healthCheck() {
+        log.info("api endpoint");
+        return "healthy";
+    }
+
+
     /**
      * Retrieves all shares from the JpaShareService.
      *
      * @return an iterable collection of Share objects.
      */
-    @GetMapping
-    public Iterable<Share> getAllShares() {
+    @GetMapping(produces = "application/json")
+    public Iterable<ShareDTO> getAllShares() {
         log.info("Get all shares");
         return shareService.getAllShares();
     }
