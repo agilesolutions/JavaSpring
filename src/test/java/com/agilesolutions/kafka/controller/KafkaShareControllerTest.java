@@ -8,6 +8,7 @@ import com.agilesolutions.kafka.service.KafkaShareService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(KafkaShareController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = {KafkaShareController.class, JunitConfig.class, MvcConfig.class, CustomControllerAdvice.class})
 class KafkaShareControllerTest {
 
@@ -40,7 +42,7 @@ class KafkaShareControllerTest {
         Mockito.when(kafkaShareService.getAllShares()).thenReturn(List.of(Share.newBuilder().setCompany("APPL").setId(1).setQuantity(10).build()));
 
         // THEN
-        ResultActions resultActions = mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/kafka/shares").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 //.andDo(print());
                 .andExpect(content().string(containsStringIgnoringCase("10")));
@@ -53,7 +55,7 @@ class KafkaShareControllerTest {
         Mockito.when(kafkaShareService.getAllShares()).thenThrow(new NullPointerException("action is null"));
 
         // THEN
-        mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/kafka/shares").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(containsString("action is null")));
     }
@@ -64,7 +66,7 @@ class KafkaShareControllerTest {
         Mockito.when(kafkaShareService.getAllShares()).thenThrow(new RuntimeException("Unexpected error"));
 
         // THEN
-        mockMvc.perform(get("/kafka/shares").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/kafka/shares").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(containsString("Unexpected error")));
     }

@@ -1,6 +1,12 @@
 spring:
   application:
     name: allinone
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+# ${wiremock.server.port} is automatically injected by the WireMock Spring integration.
+          jwk-set-uri: http://localhost:8787/.well-known/jwks.json
   datasource:
     DriverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5438/shares

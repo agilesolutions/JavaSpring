@@ -6,6 +6,7 @@ import com.agilesolutions.mongo.service.MongoDBShareService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * It verifies the behavior of the controller's HTTP endpoints by mocking the service layer.
  */
 @WebMvcTest(MongoDBShareController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @ContextConfiguration(classes = {MongoDBShareController.class, CustomControllerAdvice.class})
 class MongoDBShareControllerTest {
 
@@ -48,7 +50,7 @@ class MongoDBShareControllerTest {
         );
         when(shareService.getAllShares()).thenReturn(shares);
 
-        mockMvc.perform(get("/mongo/shares")
+        mockMvc.perform(get("/api/mongo/shares")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].company").value("Share1"))
@@ -66,7 +68,7 @@ class MongoDBShareControllerTest {
     void getAllSharesReturnsEmptyList() throws Exception {
         when(shareService.getAllShares()).thenReturn(List.of());
 
-        mockMvc.perform(get("/mongo/shares")
+        mockMvc.perform(get("/api/mongo/shares")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -84,7 +86,7 @@ class MongoDBShareControllerTest {
     void getAllSharesServiceThrowsException() throws Exception {
         when(shareService.getAllShares()).thenThrow(new RuntimeException("Service error"));
 
-        mockMvc.perform(get("/mongo/shares")
+        mockMvc.perform(get("/api/mongo/shares")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isInternalServerError());
     }
