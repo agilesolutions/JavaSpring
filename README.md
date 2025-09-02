@@ -195,6 +195,32 @@ This application provides two sets of endpoints:
 - Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
 - Secured endpoints: `/api/**` - require authentication and authorization Authorization: Bearer <access_token>
 
+#### Oauth2.0 client and resource server setup
+- I am faking up OAuth2 server (/oauth2/token + JWKS) issues valid RS256-signed JWTs.
+- The resource server validates the JWTs using the JWKS endpoint exposed by the fake OAuth2 server.
+- The client application uses the OAuth2 Authorization Code flow to obtain access tokens from the fake OAuth2 server.
+- The client application includes the access tokens in the Authorization header when making requests to the resource server.
+- A JwtDecoder that validates the signature, issuer, and audience of the JWTs.
+- An OAuth2AuthorizedClientService that stores authorized clients in memory.
+- The resource server validates the access tokens and authorizes access to protected resources based on the scopes and roles contained in the tokens (A JWKS endpoint (/.well-known/jwks.json) exposing the public key)
+- The application uses method-level security annotations (e.g., @PreAuthorize) to enforce authorization rules on specific endpoints, Maps the roles claim into Spring Security authorities so @PreAuthorize("hasRole('ADMIN')") works.
+- The application uses a custom UserDetailsService to load user details from an in-memory store for authentication purposes.
+- The application uses BCryptPasswordEncoder to hash and verify user passwords.
+- The application uses a custom JwtAuthenticationConverter to extract roles from the JWT and map them to Spring Security authorities.
+
+#### Oauth2.0 client (OIDC authorization code grant flow)processing flow:
+1. The client application initiates the OAuth2 Authorization Code flow by redirecting the user to the authorization endpoint of the fake OAuth2 server.
+2. The user authenticates with the fake OAuth2 server and grants consent to the client application
+3. The fake OAuth2 server redirects the user back to the client application with an authorization code.
+4. The client application exchanges the authorization code for an access token by making a POST request to the token endpoint of the fake OAuth2 server.
+5. The fake OAuth2 server validates the authorization code and returns an access token (a JWT signed with RS256) to the client application.
+6. The client application includes the access token in the Authorization header when making requests to the resource server.
+7. The resource server validates the access token and authorizes access to protected resources based on the scopes and roles contained in the token.
+8. The application uses method-level security annotations (e.g., @PreAuthorize) to enforce authorization rules on specific endpoints.
+9. The application uses a custom UserDetailsService to load user details from an in-memory store for authentication purposes.
+10. The application uses BCryptPasswordEncoder to hash and verify user passwords.
+11. The application uses a custom JwtAuthenticationConverter to extract roles from the JWT and map them to Spring Security authorities.
+12. The application logs security-related events for auditing and monitoring purposes.
         
     
     

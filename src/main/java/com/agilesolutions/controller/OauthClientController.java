@@ -35,14 +35,20 @@ public class OauthClientController {
         return ResponseEntity.ok(shares);
     }
 
-    @GetMapping("/")
-    public String get() {
-        return "Login Success";
+
+    @GetMapping("/healthCheck")
+    public String healthCheck() {
+        String message =  this.restClient.get()
+                .uri("http://localhost:8080/api/jpa/shares/healthCheck")
+                .accept(MediaType.APPLICATION_JSON)
+                .attributes(clientRegistrationId("my-client"))
+                .retrieve()
+                .body(String.class);
+
+
+        return message;
+
     }
-
-
-
-
 
 
 }
