@@ -3,16 +3,10 @@ spring:
     name: allinone
   security:
     oauth2:
-      client:
-        registration:
-          my-client:
-            provider: mock-provider
-            authorization-grant-type: client_credentials
-            client-id: test-client
-            client-secret: test-secret
-        provider:
-          mock-provider:
-            token-uri: http://localhost:8089/oauth2/token
+      resourceserver:
+        jwt:
+# ${wiremock.server.port} is automatically injected by the WireMock Spring integration.
+          jwk-set-uri: http://localhost:8787/.well-known/jwks.json
   datasource:
     DriverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5438/shares
