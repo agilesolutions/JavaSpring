@@ -222,10 +222,10 @@ This application provides two sets of endpoints:
 11. The application uses a custom JwtAuthenticationConverter to extract roles from the JWT and map them to Spring Security authorities.
 12. The application logs security-related events for auditing and monitoring purposes.
         
-    
-    
-    
-
+## Observability with Micrometer to collecting JVM, CPU and HTTP metrics
+- JVM Memory: jvm.memory.used, jvm.memory.max, jvm.gc.pause, etc.
+- CPU: system.cpu.usage, process.cpu.usage, system.load.average.1m, etc.
+- HTTP Requests: http.server.requests — counts, timers, percentiles, tags by status, method, URI.
 
 
 ## Monitoring and Logging
