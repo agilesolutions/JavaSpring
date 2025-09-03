@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: allinone
+resources:
+- ../../base
+patches:
+  - path: ./service-patch.yaml
+images:
+  - name: allinone
+    newName: agilesolutions/allinone
+    newTag: 1.0.1
+labels:
+- includeSelectors: true
+  pairs:
+    env: local

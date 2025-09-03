@@ -182,15 +182,17 @@ This is depicting a typical OIDC Authorization Code Flow.
 
 
 ### Security Testing
-You can test the security of the application using [HTTPie CLI](https://github.com/httpie/cli) tool. First, obtain an access token using the following command:
-```bash
-http --form POST http://localhost:8080/oauth/token grant_type=password client_id=clientapp client_secret secret username=user password=password
+You need to have docker for desktop running and local kubernetes cluster started. Run the following commands to...
+1. Build spring boot jar and pack in on a docker image.
+2. run the kustomize local overlay to setup a k8s namespace, deployment and service with is setup for nodeport 30080
+3. run swagger UI from [http://localhost:30080/swagger-ui.html](http://localhost:30080/swagger-ui.html)
+4. check prometheus collected metrics through [actuator/prometheus endpoint](http://localhost:30080/actuator/prometheus)
 ```
-This will return a JSON response with the access token. You can then use the access token to access the secured endpoints. For example:
-```bash
-http --offline GET http://localhost:8080/api/jpa/shares -A bearer -a "b453919a139448c5891eadeb14bf1080a2624b03" 
+gradle build
+gradle dockerBuild
+kubectl apply -k ./kustomize/overlays/local
+kubectl logs -f -n allinone -l app=allinone
 ```
-
 This application provides two sets of endpoints:
 - Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
 - Secured endpoints: `/api/**` - require authentication and authorization Authorization: Bearer <access_token>

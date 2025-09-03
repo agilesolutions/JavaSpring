@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class WebSecurity {
 
-    private static final String[] WHITLIST = {"/healthCheck","actuator", "/swagger-ui.html"};
+    private static final String[] WHITELIST = {"/healthCheck","actuator", "/swagger-ui.html"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -49,6 +49,7 @@ public class WebSecurity {
                                         new AntPathRequestMatcher("/images/**"),
                                         new AntPathRequestMatcher("/actuator/**"),
                                         new AntPathRequestMatcher("/v3/api-docs/**"),
+                                        new AntPathRequestMatcher("/swagger-ui.html"),
                                         new AntPathRequestMatcher("/swagger-ui/**"),
                                         new AntPathRequestMatcher("/.well-known/**"),
                                         new AntPathRequestMatcher("/oauth-client/**"),

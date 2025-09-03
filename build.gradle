@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.agilesolutions.spring'
-version = '1.0.0'
+version = '1.0.1'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -244,11 +244,11 @@ bootJar {
 }
 
 task dockerBuild(type: Exec) {
-    commandLine 'docker', 'build', '-t', "agilesolutions/k8sdemo:${version}", '.'
+    commandLine 'docker', 'build', '-t', "agilesolutions/allinone:${version}", '.'
 }
 
 task dockerPush(type: Exec) {
-    commandLine 'docker', 'push', "agilesolutions/k8sdemo:${version}"
+    commandLine 'docker', 'push', "agilesolutions/allinone:${version}"
 }
 
 task release(type: GradleBuild) {

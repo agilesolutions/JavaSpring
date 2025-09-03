@@ -4,6 +4,7 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
+#  - ingress.yaml
 # default image (will be overridden by overlays/CI)
 images:
   - name: allinone
