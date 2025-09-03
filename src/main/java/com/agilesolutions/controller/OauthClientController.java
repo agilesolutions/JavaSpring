@@ -1,6 +1,7 @@
 package com.agilesolutions.controller;
 
 import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.StockResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.ParameterizedTypeReference;
@@ -23,8 +24,20 @@ public class OauthClientController {
 
     private final RestClient restClient;
 
+
+    @GetMapping("/stockPrices")
+    public StockResponse stockPrices() {
+        return this.restClient.get()
+                .uri("http://localhost:8080/api/assets/stockPrices/AAPL")
+                .accept(MediaType.APPLICATION_JSON)
+                .attributes(clientRegistrationId("my-client"))
+                .retrieve()
+                .body(StockResponse.class);
+
+    }
+
     @GetMapping("/shares")
-    public ResponseEntity<List<ShareDTO>> messages() {
+    public ResponseEntity<List<ShareDTO>> shares() {
         List<ShareDTO> shares = this.restClient.get()
                 .uri("http://localhost:8080/api/jpa/shares")
                 .accept(MediaType.APPLICATION_JSON)

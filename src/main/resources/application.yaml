@@ -1,6 +1,24 @@
 server:
   port: 8080
 
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  tracing:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    mongo:
+      command:
+        enabled: false
+    export:
+      prometheus:
+        enabled: true
+
 spring:
   security:
     oauth2:
@@ -69,20 +87,7 @@ service:
     multiplier: 2.0
     max-attempts: 3
 
-management:
-  tracing:
-    enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health,metrics,prometheus
-  metrics:
-    mongo:
-      command:
-        enabled: false
-    export:
-      prometheus:
-        enabled: true
+
 
 twelvedata:
   api:

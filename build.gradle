@@ -10,7 +10,7 @@ plugins {
 }
 
 group = 'com.agilesolutions.spring'
-version = '1.0.0'
+version = '1.0.1'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -64,7 +64,6 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.kafka:spring-kafka-test'
     implementation 'org.springframework.boot:spring-boot-starter-logging'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation 'org.apache.avro:trevni-avro:1.11.3'
@@ -90,6 +89,9 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation 'com.nimbusds:nimbus-jose-jwt:10.4.2'
 
+    // Actuator and Micrometer, Prometheus setups
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("io.micrometer:micrometer-registry-prometheus")
 
     // keycloak wiremock setups
     implementation 'org.springframework.boot:spring-boot-starter-mustache'
@@ -242,11 +244,11 @@ bootJar {
 }
 
 task dockerBuild(type: Exec) {
-    commandLine 'docker', 'build', '-t', "agilesolutions/k8sdemo:${version}", '.'
+    commandLine 'docker', 'build', '-t', "agilesolutions/allinone:${version}", '.'
 }
 
 task dockerPush(type: Exec) {
-    commandLine 'docker', 'push', "agilesolutions/k8sdemo:${version}"
+    commandLine 'docker', 'push', "agilesolutions/allinone:${version}"
 }
 
 task release(type: GradleBuild) {

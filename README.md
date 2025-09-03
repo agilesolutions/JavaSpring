@@ -182,15 +182,17 @@ This is depicting a typical OIDC Authorization Code Flow.
 
 
 ### Security Testing
-You can test the security of the application using [HTTPie CLI](https://github.com/httpie/cli) tool. First, obtain an access token using the following command:
-```bash
-http --form POST http://localhost:8080/oauth/token grant_type=password client_id=clientapp client_secret secret username=user password=password
+You need to have docker for desktop running and local kubernetes cluster started. Run the following commands to...
+1. Build spring boot jar and pack in on a docker image.
+2. run the kustomize local overlay to setup a k8s namespace, deployment and service with is setup for nodeport 30080
+3. run swagger UI from [http://localhost:30080/swagger-ui.html](http://localhost:30080/swagger-ui.html)
+4. check prometheus collected metrics through [actuator/prometheus endpoint](http://localhost:30080/actuator/prometheus)
 ```
-This will return a JSON response with the access token. You can then use the access token to access the secured endpoints. For example:
-```bash
-http --offline GET http://localhost:8080/api/jpa/shares -A bearer -a "b453919a139448c5891eadeb14bf1080a2624b03" 
+gradle build
+gradle dockerBuild
+kubectl apply -k ./kustomize/overlays/local
+kubectl logs -f -n allinone -l app=allinone
 ```
-
 This application provides two sets of endpoints:
 - Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
 - Secured endpoints: `/api/**` - require authentication and authorization Authorization: Bearer <access_token>
@@ -222,10 +224,63 @@ This application provides two sets of endpoints:
 11. The application uses a custom JwtAuthenticationConverter to extract roles from the JWT and map them to Spring Security authorities.
 12. The application logs security-related events for auditing and monitoring purposes.
         
-    
-    
-    
+## Observability with Micrometer to collecting JVM, CPU and HTTP metrics
+- JVM Memory: jvm.memory.used, jvm.memory.max, jvm.gc.pause, etc.
+- CPU: system.cpu.usage, process.cpu.usage, system.load.average.1m, etc.
+- HTTP Requests: http.server.requests — counts, timers, percentiles, tags by status, method, URI.
 
+### Grafana dashboard and install
+```
+choco install grafana -y
+Start-Service grafana
+Set-Service -Name grafana -StartupType Automatic
+```
+👉 http://localhost:3000
+
+Default username: admin
+
+Default password: admin (you’ll be asked to change it on first login)
+
+### Install Prometheus
+```
+choco install prometheus -y
+C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml
+add 
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "springboot"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["localhost:8080"]   # replace with your app host:port
+      
+assuming springboot configures
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, metrics
+
+
+prometheus --config.file="C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml"
+
+Start-Service prometheus
+
+Go to:
+
+👉 http://localhost:9090
+
+You can query metrics here, e.g.:
+
+jvm_memory_used_bytes
+
+system_cpu_usage
+
+http_server_requests_seconds_count
+```
 
 
 ## Monitoring and Logging
