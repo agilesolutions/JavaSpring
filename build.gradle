@@ -89,7 +89,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation 'com.nimbusds:nimbus-jose-jwt:10.4.2'
 
-    // Actuator and Micrometer
+    // Actuator and Micrometer, Prometheus setups
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
 

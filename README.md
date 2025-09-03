@@ -227,6 +227,59 @@ This application provides two sets of endpoints:
 - CPU: system.cpu.usage, process.cpu.usage, system.load.average.1m, etc.
 - HTTP Requests: http.server.requests — counts, timers, percentiles, tags by status, method, URI.
 
+### Grafana dashboard and install
+```
+choco install grafana -y
+Start-Service grafana
+Set-Service -Name grafana -StartupType Automatic
+```
+👉 http://localhost:3000
+
+Default username: admin
+
+Default password: admin (you’ll be asked to change it on first login)
+
+### Install Prometheus
+```
+choco install prometheus -y
+C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml
+add 
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "springboot"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      - targets: ["localhost:8080"]   # replace with your app host:port
+      
+assuming springboot configures
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, metrics
+
+
+prometheus --config.file="C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml"
+
+Start-Service prometheus
+
+Go to:
+
+👉 http://localhost:9090
+
+You can query metrics here, e.g.:
+
+jvm_memory_used_bytes
+
+system_cpu_usage
+
+http_server_requests_seconds_count
+```
+
 
 ## Monitoring and Logging
 The application is integrated with Prometheus and Grafana for monitoring, and Elasticsearch, Logstash, and Kibana (ELK stack) for logging. You can access the monitoring and logging dashboards using the following URLs:

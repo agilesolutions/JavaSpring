@@ -5,12 +5,14 @@ import com.agilesolutions.dto.StockResponse;
 import com.agilesolutions.jpa.model.DailyStockData;
 import com.agilesolutions.model.StockData;
 import com.agilesolutions.rest.StockClient;
+import io.micrometer.core.annotation.Counted;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.ResourceAccessException;
@@ -44,6 +46,9 @@ public class StockService {
                     multiplierExpression = "${service.retry.multiplier}"
             )
     )
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Counted(value = "stockPrices.service.invocations", description = "Number of times TwelveData.com the service is invoked")
     public StockResponse getLatestStockPrices(@PathVariable String company) {
 
         log.info("Get stock prices for: {}", company);
