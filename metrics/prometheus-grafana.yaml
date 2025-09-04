@@ -19,17 +19,17 @@ data:
           - targets: ['localhost:9090']
 
       # Scrape Spring Boot app actuator endpoint
-      - job_name: 'spring-boot-app'
+      - job_name: 'springboot-app'
+        metrics_path: '/actuator/prometheus'
         kubernetes_sd_configs:
-          - role: pod
+          - role: endpoints
+            namespaces:
+              names:
+                - allinone
         relabel_configs:
-          - source_labels: [__meta_kubernetes_pod_label_app]
+          - source_labels: [__meta_kubernetes_service_name]
             action: keep
-            regex: spring-boot-app
-          - source_labels: [__meta_kubernetes_pod_container_port_number]
-            action: keep
-            regex: "8080"
-        metrics_path: /actuator/prometheus
+            regex: allinone
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -191,11 +191,14 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: prometheus-pod-reader
+  name: prometheus-scrape
 rules:
   - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["*"]
+    resources:
+      - endpoints
+      - services
+      - pods
+    verbs: ["get", "list", "watch"]
   - apiGroups: [""]
     resources: ["pods/log"]
     verbs: ["get", "list"]
@@ -204,19 +207,12 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus-pod-reader-binding
+  name: prometheus-scrape
 subjects:
   - kind: ServiceAccount
-    name: monitoring
+    name: default
     namespace: monitoring   # namespace where the service account is created
 roleRef:
   kind: ClusterRole
-  name: prometheus-pod-reader
+  name: prometheus-scrape
   apiGroup: rbac.authorization.k8s.io
-
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: monitoring
-  namespace: monitoring
