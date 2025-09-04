@@ -184,14 +184,18 @@ This is depicting a typical OIDC Authorization Code Flow.
 ### Security Testing
 You need to have docker for desktop running and local kubernetes cluster started. Run the following commands to...
 1. Build spring boot jar and pack in on a docker image.
-2. run the kustomize local overlay to setup a k8s namespace, deployment and service with is setup for nodeport 30080
+2. run the kustomize local overlay to set up a k8s namespace, deployment and service binding to nodeport 30080
+3. kubectl apply everything in metrics folder, k8s deploying prometheus and grafana and binding node ports.
 3. run swagger UI from [http://localhost:30080/swagger-ui.html](http://localhost:30080/swagger-ui.html)
 4. check prometheus collected metrics through [actuator/prometheus endpoint](http://localhost:30080/actuator/prometheus)
 ```
 gradle build
 gradle dockerBuild
 kubectl apply -k ./kustomize/overlays/local
+kubectl apply -f ./metrics
 kubectl logs -f -n allinone -l app=allinone
+kubectl logs -f -n monitoring -l app=prometheus
+kubectl logs -f -n monitoring -l app=grafana
 ```
 This application provides two sets of endpoints:
 - Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
