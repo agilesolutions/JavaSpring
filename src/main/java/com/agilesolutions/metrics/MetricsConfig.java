@@ -10,6 +10,6 @@ public class MetricsConfig {
     @Bean
     MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
         return registry -> registry.config()
-                .commonTags("application", "orders-service", "env", "prod");
+                .commonTags("application", "allinone", "env", "local");
     }
 }
