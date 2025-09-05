@@ -252,7 +252,7 @@ task dockerPush(type: Exec) {
 }
 
 task release(type: GradleBuild) {
-    tasks = ['clean', 'build', 'dockerBuild', 'generateHelmChart']
+    tasks = ['clean', 'build', 'dockerBuild']
 }
 
 test.dependsOn generateHelmChart

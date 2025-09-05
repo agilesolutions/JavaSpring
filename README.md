@@ -22,7 +22,7 @@ Note: This service is implemented as a Spring Boot monolith to demonstrate cross
 - Java 21 or higher
 - Gradle 7.0 or higher
 - Docker
-- Kubernetes cluster (public or private)
+- Kubernetes one node cluster running on Docker for Desktop
 - GitLab account with a project
 
 ## Project Structure
@@ -95,6 +95,9 @@ kotlinspring/
         └── ingress.yaml
 ```
 ## Build and Run the Application
+This will Gradle build, test and package SpringBoot jar. Accordingly build a docker image, ready to get deployed to Kubernetes with Kustomize overlay local. 
+Running the kubernetes manifests on the metrics directory will spin up a pre-configured Prometheus and Grafana POD. Prometheus is pre-configured to scrape the 
+actuator/prometheus endpoint and absorbing SpringBoot runtime statistics.
 ### Build the application
 ```
 gradle build
@@ -104,19 +107,25 @@ This will compile the code, run tests, and create a JAR file in the `build/libs`
 ### Run the application
 You can run the application using the following command:
 ```bash
-java -jar build/libs/application-1.0.0.jar
+gradle release # compile, test, package and docker build
+kubectl apply -k ./kustomize/overlays/local # kustomize deploy springboot deployment and service
+kubectl apply -f ./metrics # deploy k8s deployments and services to run Prometheus and Grafana.
+kubectl logs -f -n allinone -l app=allinone # check the logs on springboot
+kubectl logs -f -n monitoring -l app=prometheus # tail the logs on prometheus
+kubectl logs -f -n monitoring -l app=grafana # tail the logs on grafana
 ```
-## Docker
-### Build the Docker image
-You can build the Docker image using the following command:
-```bash
-docker build -t allinone:latest -f docker/Dockerfile .
-``` 
-### Run the Docker container
-You can run the Docker container using the following command:
-```bash
-docker run -p 8080:8080 allinone:latest
-```
+
+- [Swagger UI](http://localhost:30080/swagger-ui.html)
+- [Grafana UI](http://localhost:30070/)
+- [Prometheus UI](http://localhost:30090/)
+
+### Setup grafana dashboard
+- use admin/admin credentials to login and resetting password
+- import dashboard [12900](https://grafana.com/grafana/dashboards/12900-springboot-apm-dashboard/)
+- select prometheus datasource (pre-configured on deployment)
+- And your first runtime statistics will show...
+
+
 ## Gradle Tasks
 - `generateAvro`: Generates Avro classes from the Avro schema files.
 - `bootRun`: Runs the Spring Boot application.
@@ -173,7 +182,8 @@ This application is setup to securing and authorizing REST endpoints using Sprin
 
 ### Architecture
 This is depicting a typical OIDC Authorization Code Flow. 
-1. The client requests an access token from the Authorization Serve
+1. The client requests an access token from the Authorization Server
+2. 
 2. The Authorization Server validates credentials and returns a token
 3. The client includes this token when requesting protected resources
 4. The Resource Server validates the token before serving the request
@@ -184,14 +194,17 @@ This is depicting a typical OIDC Authorization Code Flow.
 ### Security Testing
 You need to have docker for desktop running and local kubernetes cluster started. Run the following commands to...
 1. Build spring boot jar and pack in on a docker image.
-2. run the kustomize local overlay to setup a k8s namespace, deployment and service with is setup for nodeport 30080
+2. run the kustomize local overlay to set up a k8s namespace, deployment and service binding to nodeport 30080
+3. kubectl apply everything in metrics folder, k8s deploying prometheus and grafana and binding node ports.
 3. run swagger UI from [http://localhost:30080/swagger-ui.html](http://localhost:30080/swagger-ui.html)
 4. check prometheus collected metrics through [actuator/prometheus endpoint](http://localhost:30080/actuator/prometheus)
 ```
-gradle build
-gradle dockerBuild
+gradle release
 kubectl apply -k ./kustomize/overlays/local
+kubectl apply -f ./metrics
 kubectl logs -f -n allinone -l app=allinone
+kubectl logs -f -n monitoring -l app=prometheus
+kubectl logs -f -n monitoring -l app=grafana
 ```
 This application provides two sets of endpoints:
 - Public endpoints: `/swagger-ui.html, /actuator, /v3/api-docs` - accessible without authentication.
@@ -230,58 +243,23 @@ This application provides two sets of endpoints:
 - HTTP Requests: http.server.requests — counts, timers, percentiles, tags by status, method, URI.
 
 ### Grafana dashboard and install
-```
-choco install grafana -y
-Start-Service grafana
-Set-Service -Name grafana -StartupType Automatic
-```
-👉 http://localhost:3000
-
-Default username: admin
-
-Default password: admin (you’ll be asked to change it on first login)
-
-### Install Prometheus
-```
-choco install prometheus -y
-C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml
-add 
-
-global:
-  scrape_interval: 15s
-
-scrape_configs:
-  - job_name: "springboot"
-    metrics_path: "/actuator/prometheus"
-    static_configs:
-      - targets: ["localhost:8080"]   # replace with your app host:port
-      
-assuming springboot configures
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: prometheus, metrics
 
 
-prometheus --config.file="C:\ProgramData\chocolatey\lib\prometheus\tools\prometheus.yml"
+<img title="Grafana SpringBoot APM Dashboard" alt="Alt text" src="/images/dashboard.png">
 
-Start-Service prometheus
-
-Go to:
-
-👉 http://localhost:9090
-
-You can query metrics here, e.g.:
-
-jvm_memory_used_bytes
-
-system_cpu_usage
-
-http_server_requests_seconds_count
+```bash
+kubectl apply -f ./metrics # deploy k8s deployments and services to run Prometheus and Grafana.
+kubectl logs -f -n monitoring -l app=prometheus # tail the logs on prometheus
+kubectl logs -f -n monitoring -l app=grafana # tail the logs on grafana
 ```
 
+- [Swagger UI](http://localhost:30080/swagger-ui.html)
+- [Grafana UI](http://localhost:30070/)
+- [Prometheus UI](http://localhost:30090/)
+
+### Setup grafana dashboard
+- import dashboard [12900](https://grafana.com/grafana/dashboards/12900-springboot-apm-dashboard/)
+- select prometheus datasource (pre-configured on deployment)
 
 ## Monitoring and Logging
 The application is integrated with Prometheus and Grafana for monitoring, and Elasticsearch, Logstash, and Kibana (ELK stack) for logging. You can access the monitoring and logging dashboards using the following URLs:
