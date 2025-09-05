@@ -1,0 +1,52 @@
+trigger:
+  - 12-add-azure-devops-pipeline
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  dockerRegistryServiceConnection: 'dockerhub' # name of ACR service connection
+  imageRepository: 'agilesolutions/findata' # name of image repository
+  containerRegistry: 'Docker Hub' # name of Azure container registry
+  imagePullSecret: 'github-auth'
+  tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+
+          - script: echo "Setting JAVA_HOME to JDK 17 location."
+            displayName: 'Set JAVA_HOME to JDK 21'
+
+          - task: Cache@2
+            displayName: configure gradle caching
+            continueOnError: true
+            inputs:
+              key: 'gradle | "$(Agent.OS)" $(Pipeline.Workspace)/build.gradle'
+              restoreKeys: |
+                gradle | "$(Agent.OS)"
+                gradle
+              path: '$(Pipeline.Workspace)/.gradle'
+
+          - task: Gradle@2
+            displayName: 'build service'
+            inputs:
+              gradleWrapperFile: 'gradlew'
+              workingDirectory: ''
+              gradleOptions: '-Dorg.gradle.daemon=false'
+              tasks: '--info build'
+
+          - publish: manifests
+            artifact: manifests
