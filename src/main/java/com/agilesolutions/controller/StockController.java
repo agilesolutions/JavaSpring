@@ -38,8 +38,7 @@ public class StockController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "HTTP Status OK",
-            ),
+                    description = "HTTP Status OK"),
             @ApiResponse(
                     responseCode = "500",
                     description = "HTTP Status Internal Server Error",
