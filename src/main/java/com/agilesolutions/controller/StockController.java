@@ -1,6 +1,6 @@
 package com.agilesolutions.controller;
 
-import com.agilesolutions.dto.StockResponse;
+import com.agilesolutions.dto.StockDto;
 import com.agilesolutions.service.StockService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -50,11 +50,11 @@ public class StockController {
     )
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/stockPrices/{company}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StockResponse> getLatestStockPrices(@PathVariable("company") String company) {
+    public ResponseEntity<StockDto> getLatestStockPrices(@PathVariable("company") String company) {
 
         log.info("Get stock prices for: {}", company);
 
-        StockResponse stockResponse = stockService.getLatestStockPrices(company);
+        StockDto stockResponse = stockService.getLatestStockPrices(company);
 
         return ResponseEntity.ok(stockResponse);
     }

@@ -1,6 +1,6 @@
 package com.agilesolutions.controller;
 
-import com.agilesolutions.dto.StockResponse;
+import com.agilesolutions.dto.StockDto;
 import com.agilesolutions.exception.CustomControllerAdvice;
 import com.agilesolutions.service.StockService;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class StockControllerTest {
     public void givenFinancialAssets_whenInquiringApple_thenReturnStockPricesForApple() throws Exception {
 
         // WHEN
-        Mockito.when(stockService.getLatestStockPrices("APPL")).thenReturn(StockResponse.builder().price(1.0F).build());
+        Mockito.when(stockService.getLatestStockPrices("APPL")).thenReturn(StockDto.builder().price(1.0F).build());
 
         // THEN
         ResultActions resultActions = mockMvc.perform(get("/api/assets/stockPrices/{company}", "APPL"))

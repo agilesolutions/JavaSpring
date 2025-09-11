@@ -1,7 +1,7 @@
 package com.agilesolutions.controller;
 
 import com.agilesolutions.dto.ShareDTO;
-import com.agilesolutions.dto.StockResponse;
+import com.agilesolutions.dto.StockDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,13 +38,13 @@ public class OauthClientController {
 
 
     @GetMapping("/stockPrices")
-    public StockResponse stockPrices() {
+    public StockDto stockPrices() {
         return this.restClient.get()
                 .uri("http://localhost:8080/api/assets/stockPrices/AAPL")
                 .accept(MediaType.APPLICATION_JSON)
                 .attributes(clientRegistrationId("my-client"))
                 .retrieve()
-                .body(StockResponse.class);
+                .body(StockDto.class);
 
     }
 
