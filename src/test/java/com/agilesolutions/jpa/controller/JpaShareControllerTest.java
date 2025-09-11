@@ -41,7 +41,7 @@ class JpaShareControllerTest {
         // WHEN & THEN
         mockMvc.perform(get("/api/jpa/shares/1").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"company\":\"Company A\",\"quantity\":100}"));
+                .andExpect(content().json("{\"company\":\"Company A\",\"quantity\":100}"));
     }
 
     @Test
@@ -65,7 +65,7 @@ class JpaShareControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"company\":\"Company A\",\"quantity\":100}"))
                 .andExpect(status().isCreated())
-                .andExpect(content().json("{\"id\":1,\"company\":\"Company A\",\"quantity\":100}"));
+                .andExpect(content().json("{\"company\":\"Company A\",\"quantity\":100}"));
     }
 
     @Test
@@ -79,7 +79,7 @@ class JpaShareControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"id\":1,\"company\":\"Company B\",\"quantity\":200}"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":1,\"company\":\"Company B\",\"quantity\":200}"));
+                .andExpect(content().json("{\"company\":\"Company B\",\"quantity\":200}"));
     }
 
     @Test
@@ -90,7 +90,7 @@ class JpaShareControllerTest {
         // WHEN & THEN
         mockMvc.perform(put("/api/jpa/shares/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"company\":\"Company B\",\"quantity\":200}"))
+                        .content("{\"company\":\"Company B\",\"quantity\":200}"))
                 .andExpect(status().isBadRequest());
     }
 

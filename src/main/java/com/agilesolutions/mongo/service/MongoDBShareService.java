@@ -29,7 +29,7 @@ public class MongoDBShareService {
      */
     public List<ShareDTO> getAllShares() {
         return ((List<Share>) shareRepository.findAll()).stream()
-                .map(s -> ShareDTO.builder().company(s.getCompany()).Quantity(s.getQuantity()).build())
+                .map(s -> ShareDTO.builder().company(s.getCompany()).quantity(s.getQuantity()).build())
                 .collect(Collectors.toList());
     }
 

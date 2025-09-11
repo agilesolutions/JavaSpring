@@ -56,7 +56,7 @@ public class KafkaShareController {
                 .stream()
                 .map(s -> ShareDTO.builder()
                         .company(s.getCompany())
-                        .Quantity(s.getQuantity())
+                        .quantity(s.getQuantity())
                         .build())
                 .collect(Collectors.toUnmodifiableList());
 

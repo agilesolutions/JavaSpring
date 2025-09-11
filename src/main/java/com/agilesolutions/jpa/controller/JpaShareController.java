@@ -107,7 +107,7 @@ public class JpaShareController {
     public ResponseEntity<ShareDTO> getShareById(@PathVariable Long id) {
         log.info("Get share by ID: {}", id);
         return shareService.getShareById(id)
-                .map(s -> ResponseEntity.ok(ShareDTO.builder().Quantity(s.getQuantity()).company(s.getCompany()).build()))
+                .map(s -> ResponseEntity.ok(ShareDTO.builder().quantity(s.getQuantity()).company(s.getCompany()).build()))
                 .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 
@@ -133,7 +133,7 @@ public class JpaShareController {
     public ResponseEntity<ShareDTO> createShare(@RequestBody Share share) {
         log.info("Create new share: {}", share);
         Share createdShare = shareService.createShare(share);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ShareDTO.builder().company(createdShare.getCompany()).Quantity(createdShare.getQuantity()).build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ShareDTO.builder().company(createdShare.getCompany()).quantity(createdShare.getQuantity()).build());
     }
 
     @Operation(
@@ -162,7 +162,7 @@ public class JpaShareController {
     public ResponseEntity<ShareDTO> updateShare(@PathVariable Long id, @RequestBody Share share) {
         log.info("Update share with ID: {}", id);
         return shareService.updateShare(id, share)
-                .map(s -> ResponseEntity.ok(ShareDTO.builder().company(s.getCompany()).Quantity(s.getQuantity()).build()))
+                .map(s -> ResponseEntity.ok(ShareDTO.builder().company(s.getCompany()).quantity(s.getQuantity()).build()))
                 .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 
