@@ -1,7 +1,7 @@
 package com.agilesolutions.service;
 
 import com.agilesolutions.config.ApplicationProperties;
-import com.agilesolutions.dto.StockResponse;
+import com.agilesolutions.dto.StockDto;
 import com.agilesolutions.jpa.model.DailyStockData;
 import com.agilesolutions.model.StockData;
 import com.agilesolutions.rest.StockClient;
@@ -49,13 +49,13 @@ public class StockService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Counted(value = "stockPrices.service.invocations", description = "Number of times TwelveData.com the service is invoked")
-    public StockResponse getLatestStockPrices(@PathVariable String company) {
+    public StockDto getLatestStockPrices(@PathVariable String company) {
 
         log.info("Get stock prices for: {}", company);
         StockData data = stockClient.getLatestStockPrices(company, MINUTE_INTERVAL, 1, applicationProperties.getKey());
         DailyStockData latestData = data.getValues().get(0);
         log.info("Get stock prices ({}) -> {}", company, latestData.getClose());
-        return new StockResponse(Float.parseFloat(latestData.getClose()));
+        return new StockDto(Float.parseFloat(latestData.getClose()));
 
     }
 

@@ -1,7 +1,7 @@
 package com.agilesolutions.service;
 
 import com.agilesolutions.config.ApplicationProperties;
-import com.agilesolutions.dto.StockResponse;
+import com.agilesolutions.dto.StockDto;
 import com.agilesolutions.jpa.model.DailyStockData;
 import com.agilesolutions.model.StockData;
 import com.agilesolutions.rest.StockClient;
@@ -45,7 +45,7 @@ class StockServiceTest {
                 .thenReturn(StockData.builder().values(List.of(DailyStockData.builder().close("1.0").build())).build());
 
 
-        StockResponse response = stockService.getLatestStockPrices("AAPL");
+        StockDto response = stockService.getLatestStockPrices("AAPL");
 
         assertAll("verify result",
                 () -> assertTrue(response.price() > 0)

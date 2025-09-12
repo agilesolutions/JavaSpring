@@ -55,7 +55,7 @@ class MongoDBShareServiceTest {
         // Assert: Verify the returned list contains the expected ShareDTO.
         assertEquals(1, result.size());
         assertEquals("Company A", result.get(0).company());
-        assertEquals(100, result.get(0).Quantity());
+        assertEquals(100, result.get(0).quantity());
     }
 
     /**
