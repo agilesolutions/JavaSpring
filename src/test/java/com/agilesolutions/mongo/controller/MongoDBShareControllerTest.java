@@ -1,6 +1,6 @@
 package com.agilesolutions.mongo.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.exception.CustomControllerAdvice;
 import com.agilesolutions.mongo.service.MongoDBShareService;
 import org.junit.jupiter.api.DisplayName;
@@ -44,9 +44,9 @@ class MongoDBShareControllerTest {
     @Test
     @DisplayName("Returns list of shares as JSON")
     void getAllSharesReturnsListOfShares() throws Exception {
-        List<ShareDTO> shares = List.of(
-                new ShareDTO("Share1", 1),
-                new ShareDTO("Share2", 2)
+        List<ShareDto> shares = List.of(
+                new ShareDto("Share1", 1),
+                new ShareDto("Share2", 2)
         );
         when(shareService.getAllShares()).thenReturn(shares);
 

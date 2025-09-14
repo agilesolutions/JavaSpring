@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "AccountAvro",
+  "namespace": "com.agilesolutions.kafka.model",
+  "fields": [
+    {"name": "accountNumber", "type": "string"},
+    {"name": "accountType", "type": "string"},
+    {"name": "branchAddress", "type": "string"}
+  ]
+}

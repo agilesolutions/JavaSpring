@@ -1,6 +1,6 @@
 package com.agilesolutions.kafka.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.kafka.service.KafkaShareService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -50,11 +50,11 @@ public class KafkaShareController {
     }
     )
     @GetMapping(produces = "application/json")
-    ResponseEntity<List<ShareDTO>> getAllShares() {
+    ResponseEntity<List<ShareDto>> getAllShares() {
         log.info("Get all shares");
         List shares =  shareService.getAllShares()
                 .stream()
-                .map(s -> ShareDTO.builder()
+                .map(s -> ShareDto.builder()
                         .company(s.getCompany())
                         .quantity(s.getQuantity())
                         .build())

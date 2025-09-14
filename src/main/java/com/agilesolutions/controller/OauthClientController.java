@@ -1,6 +1,6 @@
 package com.agilesolutions.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.dto.StockDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,8 +66,8 @@ public class OauthClientController {
     }
     )
     @GetMapping("/shares")
-    public ResponseEntity<List<ShareDTO>> shares() {
-        List<ShareDTO> shares = this.restClient.get()
+    public ResponseEntity<List<ShareDto>> shares() {
+        List<ShareDto> shares = this.restClient.get()
                 .uri("http://localhost:8080/api/jpa/shares")
                 .accept(MediaType.APPLICATION_JSON)
                 .attributes(clientRegistrationId("my-client"))

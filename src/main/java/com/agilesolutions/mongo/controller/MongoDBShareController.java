@@ -1,6 +1,6 @@
 package com.agilesolutions.mongo.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.mongo.service.MongoDBShareService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +49,7 @@ public class MongoDBShareController {
     }
     )
     @GetMapping
-    public ResponseEntity<List<ShareDTO>> getAllShares() {
+    public ResponseEntity<List<ShareDto>> getAllShares() {
         log.info("Get all shares");
 
         return ResponseEntity.ok(shareService.getAllShares());
