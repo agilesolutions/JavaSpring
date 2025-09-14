@@ -30,7 +30,7 @@ ext {
     commit = commit()
     branchName = branchName()
     set('springAiVersion', "1.0.0-M6")
-    set('springCloudVersion', "2023.0.1")
+    set('springCloudVersion', "2024.0.0")
 }
 
 repositories {
@@ -98,8 +98,11 @@ dependencies {
     standalone 'org.wiremock.extensions:wiremock-jwt-extension-standalone:0.2.0'
 
     // Spring cloud functions and messaging
-    implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
-    implementation 'org.springframework.cloud:spring-cloud-stream'
+    //implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    //implementation 'org.springframework.amqp:spring-rabbit-stream'
+    //implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+    //implementation 'org.springframework.cloud:spring-cloud-stream'
     implementation("com.github.fridujo:rabbitmq-mock:1.2.0")
 
 

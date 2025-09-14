@@ -3,6 +3,7 @@ package com.agilesolutions.streams.config;
 import com.agilesolutions.dto.AccountDto;
 import com.agilesolutions.jpa.model.AccountEntity;
 import com.agilesolutions.jpa.repository.AccountRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.support.MessageBuilder;
@@ -14,9 +15,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Configuration
+@Slf4j
 public class SteamsConfig {
 
-    // Kafka Supplier (example data generator)
     @Bean
     public Supplier<AccountDto> accountSupplier() {
         return () -> {
@@ -25,12 +26,11 @@ public class SteamsConfig {
         };
     }
 
-    // Processor: Avro -> DTO
     @Bean
     public Function<AccountDto, Message<AccountDto>> accountProcessor() {
         return account -> {
             boolean isExternal = "EXTERNAL".equals(account.accountType());
-            String destination = isExternal ? "externalAccountConsumer-in-0" : "fraudConsumer-in";
+            String destination = isExternal ? "accountConsumer-in-0" : "fraudConsumer-in-0";
 
             return MessageBuilder.withPayload(account)
                     .setHeader("spring.cloud.stream.sendto.destination", destination)
@@ -42,7 +42,7 @@ public class SteamsConfig {
 
     // Consumer: DTO -> JPA Entity
     @Bean
-    public Consumer<AccountDto> externalAccountConsumer(AccountRepository repo) {
+    public Consumer<AccountDto> accountConsumer(AccountRepository repo) {
         return dto -> {
             AccountEntity entity = new AccountEntity();
             entity.setAccountNumber(dto.accountNumber());
@@ -52,15 +52,10 @@ public class SteamsConfig {
         };
     }
 
-    // Consumer: DTO -> JPA Entity
     @Bean
-    public Consumer<AccountDto> internalAccountConsumer(AccountRepository repo) {
+    public Consumer<AccountDto> fraudConsumer(AccountRepository repo) {
         return dto -> {
-            AccountEntity entity = new AccountEntity();
-            entity.setAccountNumber(dto.accountNumber());
-            entity.setAccountType(dto.accountType());
-            entity.setBranchAddress(dto.branchAddress());
-            repo.save(entity);
+            log.info("FRAUD DETECTED: {}", dto);
         };
     }
 

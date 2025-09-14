@@ -57,7 +57,7 @@ spring:
       auto-offset-reset: earliest
   cloud:
     function:
-      definitions: accountSupplier; accountProcessor; internalAccountConsumer; fraudConsumer; notificationConsumer
+      definitions: accountSupplier; accountProcessor; accountConsumer; fraudConsumer
     stream:
       function.routing.enabled: true
       bindings:
@@ -69,15 +69,12 @@ spring:
           group: accountService
         accountProcessor-out-0:
           destination: processed-accounts
-        internalAccountConsumer-in-0:
+        accountConsumer-in-0:
           destination: processed-accounts
           group: internalAccountService
         fraudConsumer-in-0:
             destination: processed-accounts
             group: fraudService
-        notificationConsumer-in-0:
-            destination: processed-accounts
-            group: notificationService
       binders:
         local_rabbit:
           type: rabbit
