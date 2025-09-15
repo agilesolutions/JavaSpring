@@ -1,6 +1,8 @@
 package com.agilesolutions.jpa.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -12,6 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 public class AccountEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;  // surrogate PK in H2
 
     private String accountNumber;

@@ -57,26 +57,23 @@ spring:
       auto-offset-reset: earliest
   cloud:
     function:
-      definitions: accountSupplier; accountProcessor; accountConsumer; fraudConsumer
+      definition: accountProcessor; accountConsumer; fraudConsumer
     stream:
       function.routing.enabled: true
       bindings:
-        accountSupplier-out-0:
-          destination: accounts
-          group: accountService
         accountProcessor-in-0:
-          destination: accounts
+          destination: accounts-topic
           group: accountService
         accountProcessor-out-0:
-          destination: processed-accounts
+          destination: processed-accounts-topic
         accountConsumer-in-0:
-          destination: processed-accounts
+          destination: processed-accounts-topic
           group: internalAccountService
         fraudConsumer-in-0:
-            destination: processed-accounts
+            destination: processed-accounts-topic
             group: fraudService
       binders:
-        local_rabbit:
+        rabbit:
           type: rabbit
           environment:
             spring:
@@ -85,8 +82,6 @@ spring:
                 port: 5672
                 username: guest
                 password: guest
-
-
 
 springdoc:
   enable-spring-security: true
@@ -125,5 +120,3 @@ twelvedata:
   api:
     url: https://api.twelvedata.com/
     key: demo
-
-spring.mustache.expose-request-attributes: true

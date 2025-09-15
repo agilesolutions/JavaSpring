@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,13 +32,13 @@ public class AccountController {
     private final AccountService accountService;
 
     @Operation(
-            summary = "Create a new share",
-            description = "REST API to create a new share in the database"
+            summary = "Send Account details",
+            description = "REST API to send Account details"
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "201",
-                    description = "HTTP Status CREATED"
+                    responseCode = "200",
+                    description = "HTTP Status OK"
             ),
             @ApiResponse(
                     responseCode = "500",
@@ -48,7 +49,8 @@ public class AccountController {
             )
     }
     )
-    @PostMapping
+    @PostMapping("/sendAccount")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AccountDto> sendAccount(@RequestBody AccountDto account) {
         log.info("Received new account: {}", account);
         accountService.publishAccount(account);

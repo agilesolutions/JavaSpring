@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,14 +16,14 @@ public class AccountService {
 
     private final StreamBridge stream;
 
-    private static final String PROCESSOR_BINDING_NAME = "accountProcessor-in-0";
+    private static final String TOPIC_NAME = "accounts-topic";
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void publishAccount(AccountDto account) {
-
 
         Message<AccountDto> message = MessageBuilder.withPayload(account).build();
 
-        stream.send(PROCESSOR_BINDING_NAME, message);
+        stream.send(TOPIC_NAME, message);
 
         log.info("Published Account: {}", account);
     }
