@@ -1,6 +1,7 @@
 package com.agilesolutions.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.AccountDto;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.dto.StockDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +15,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
@@ -66,8 +65,8 @@ public class OauthClientController {
     }
     )
     @GetMapping("/shares")
-    public ResponseEntity<List<ShareDTO>> shares() {
-        List<ShareDTO> shares = this.restClient.get()
+    public ResponseEntity<List<ShareDto>> shares() {
+        List<ShareDto> shares = this.restClient.get()
                 .uri("http://localhost:8080/api/jpa/shares")
                 .accept(MediaType.APPLICATION_JSON)
                 .attributes(clientRegistrationId("my-client"))
@@ -95,7 +94,6 @@ public class OauthClientController {
             )
     }
     )
-
     @GetMapping("/healthCheck")
     public ResponseEntity<String> healthCheck() {
         String message =  this.restClient.get()
@@ -109,6 +107,39 @@ public class OauthClientController {
         return ResponseEntity.ok(message);
 
     }
+
+    @Operation(
+            summary = "Send Account details",
+            description = "REST API to send Account details"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    }
+    )
+    @PostMapping("/sendAccount")
+    public ResponseEntity<AccountDto> sendAccount(@RequestBody AccountDto account) {
+        ResponseEntity<Void> response =  this.restClient.post()
+                .uri("http://localhost:8080/api/accounts/sendAccount")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(account)
+                .attributes(clientRegistrationId("my-client"))
+                .retrieve()
+                .toBodilessEntity();
+
+
+        return ResponseEntity.ok(account);
+    }
+
 
 
 }

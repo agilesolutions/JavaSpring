@@ -8,6 +8,7 @@ Note: This service is implemented as a Spring Boot monolith to demonstrate cross
 ## Features
 - Spring Boot application with JPA and MongoDB
 - Kafka producer and consumer
+- Asynchronous Communication with RabbitMQ and Spring Cloud Stream
 - REST API with controller and controller advice
 - Problem+JSON error handling
 - Declarative REST client

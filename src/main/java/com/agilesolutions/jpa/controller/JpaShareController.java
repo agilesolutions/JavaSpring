@@ -1,6 +1,6 @@
 package com.agilesolutions.jpa.controller;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.exception.BusinessException;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.service.JpaShareService;
@@ -77,7 +77,7 @@ public class JpaShareController {
     }
     )
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<ShareDTO>> getAllShares() {
+    public ResponseEntity<List<ShareDto>> getAllShares() {
         log.info("Get all shares");
         List shares = shareService.getAllShares();
 
@@ -104,10 +104,10 @@ public class JpaShareController {
     }
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ShareDTO> getShareById(@PathVariable Long id) {
+    public ResponseEntity<ShareDto> getShareById(@PathVariable Long id) {
         log.info("Get share by ID: {}", id);
         return shareService.getShareById(id)
-                .map(s -> ResponseEntity.ok(ShareDTO.builder().quantity(s.getQuantity()).company(s.getCompany()).build()))
+                .map(s -> ResponseEntity.ok(ShareDto.builder().quantity(s.getQuantity()).company(s.getCompany()).build()))
                 .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 
@@ -130,10 +130,10 @@ public class JpaShareController {
     }
     )
     @PostMapping
-    public ResponseEntity<ShareDTO> createShare(@RequestBody Share share) {
+    public ResponseEntity<ShareDto> createShare(@RequestBody Share share) {
         log.info("Create new share: {}", share);
         Share createdShare = shareService.createShare(share);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ShareDTO.builder().company(createdShare.getCompany()).quantity(createdShare.getQuantity()).build());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ShareDto.builder().company(createdShare.getCompany()).quantity(createdShare.getQuantity()).build());
     }
 
     @Operation(
@@ -159,10 +159,10 @@ public class JpaShareController {
     }
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ShareDTO> updateShare(@PathVariable Long id, @RequestBody Share share) {
+    public ResponseEntity<ShareDto> updateShare(@PathVariable Long id, @RequestBody Share share) {
         log.info("Update share with ID: {}", id);
         return shareService.updateShare(id, share)
-                .map(s -> ResponseEntity.ok(ShareDTO.builder().company(s.getCompany()).quantity(s.getQuantity()).build()))
+                .map(s -> ResponseEntity.ok(ShareDto.builder().company(s.getCompany()).quantity(s.getQuantity()).build()))
                 .orElseThrow(() -> new BusinessException("Share with ID " + id + " not found"));
     }
 

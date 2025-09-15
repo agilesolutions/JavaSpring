@@ -1,6 +1,6 @@
 package com.agilesolutions.mongo.service;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.mongo.model.Share;
 import com.agilesolutions.mongo.repository.MongoDBShareRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +50,7 @@ class MongoDBShareServiceTest {
         when(shareRepository.findAll()).thenReturn(List.of(share));
 
         // Act: Call the service method to retrieve all shares.
-        List<ShareDTO> result = mongoDBShareService.getAllShares();
+        List<ShareDto> result = mongoDBShareService.getAllShares();
 
         // Assert: Verify the returned list contains the expected ShareDTO.
         assertEquals(1, result.size());
@@ -68,7 +68,7 @@ class MongoDBShareServiceTest {
         when(shareRepository.findAll()).thenReturn(Collections.emptyList());
 
         // Act: Call the service method to retrieve all shares.
-        List<ShareDTO> result = mongoDBShareService.getAllShares();
+        List<ShareDto> result = mongoDBShareService.getAllShares();
 
         // Assert: Verify the returned list is empty.
         assertEquals(0, result.size());

@@ -1,6 +1,6 @@
 package com.agilesolutions.jpa.service;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.jpa.model.Share;
 import com.agilesolutions.jpa.repository.JpaShareRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +53,7 @@ class JpaShareServiceTest {
             List<Share> shares = List.of(new Share(), new Share());
             when(shareRepository.findAll()).thenReturn(shares);
 
-            List<ShareDTO> result = shareService.getAllShares();
+            List<ShareDto> result = shareService.getAllShares();
 
             assertEquals(2, result.size());
             verify(shareRepository, times(1)).findAll();
@@ -67,7 +67,7 @@ class JpaShareServiceTest {
         void returnsEmptyList() {
             when(shareRepository.findAll()).thenReturn(List.of());
 
-            List<ShareDTO> result = shareService.getAllShares();
+            List<ShareDto> result = shareService.getAllShares();
 
             assertTrue(result.isEmpty());
             verify(shareRepository, times(1)).findAll();

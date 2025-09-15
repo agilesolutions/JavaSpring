@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Schema(name = "Share", description = "Share model")
 @Builder
-public record ShareDTO(
+public record ShareDto(
         @NotEmpty(message = "Company name cannot be empty")
         String company,
         @PositiveOrZero(message = "Quantity must be zero or positive")

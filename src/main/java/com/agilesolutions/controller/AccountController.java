@@ -1,7 +1,7 @@
-package com.agilesolutions.mongo.controller;
+package com.agilesolutions.controller;
 
-import com.agilesolutions.dto.ShareDto;
-import com.agilesolutions.mongo.service.MongoDBShareService;
+import com.agilesolutions.dto.AccountDto;
+import com.agilesolutions.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,29 +10,30 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @Tag(
-        name = "CRUD REST APIs to CREATE, READ, UPDATE, DELETE shares",
-        description = "CRUD REST APIs for managing shares using MongoDB"
+        name = "CRUD REST APIs for accessing account details",
+        description = "CRUD REST APIs to access account details"
 )
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/mongo/shares")
-public class MongoDBShareController {
+@RequestMapping("/api/accounts")
+public class AccountController {
 
-    private final MongoDBShareService shareService;
+    private final AccountService accountService;
 
     @Operation(
-            summary = "Fetch all shares from the ",
-            description = "REST API to fetch all shares from the database"
+            summary = "Send Account details",
+            description = "REST API to send Account details"
     )
     @ApiResponses({
             @ApiResponse(
@@ -48,10 +49,12 @@ public class MongoDBShareController {
             )
     }
     )
-    @GetMapping
-    public ResponseEntity<List<ShareDto>> getAllShares() {
-        log.info("Get all shares");
-
-        return ResponseEntity.ok(shareService.getAllShares());
+    @PostMapping("/sendAccount")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<AccountDto> sendAccount(@RequestBody AccountDto account) {
+        log.info("Received new account: {}", account);
+        accountService.publishAccount(account);
+        return ResponseEntity.status(HttpStatus.CREATED).body(account);
     }
+
 }

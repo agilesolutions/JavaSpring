@@ -1,6 +1,6 @@
 package com.agilesolutions.mongo.service;
 
-import com.agilesolutions.dto.ShareDTO;
+import com.agilesolutions.dto.ShareDto;
 import com.agilesolutions.mongo.model.Share;
 import com.agilesolutions.mongo.repository.MongoDBShareRepository;
 import lombok.AllArgsConstructor;
@@ -27,9 +27,9 @@ public class MongoDBShareService {
      *
      * @return a list of ShareDTO objects
      */
-    public List<ShareDTO> getAllShares() {
+    public List<ShareDto> getAllShares() {
         return ((List<Share>) shareRepository.findAll()).stream()
-                .map(s -> ShareDTO.builder().company(s.getCompany()).quantity(s.getQuantity()).build())
+                .map(s -> ShareDto.builder().company(s.getCompany()).quantity(s.getQuantity()).build())
                 .collect(Collectors.toList());
     }
 
