@@ -64,14 +64,18 @@ spring:
         accountProcessor-in-0:
           destination: accounts-topic
           group: accountService
+          binder: rabbit
         accountProcessor-out-0:
           destination: processed-accounts-topic
+          binder: rabbit
         accountConsumer-in-0:
           destination: processed-accounts-topic
           group: internalAccountService
+          binder: rabbit
         fraudConsumer-in-0:
             destination: processed-accounts-topic
             group: fraudService
+            binder: rabbit
       binders:
         rabbit:
           type: rabbit

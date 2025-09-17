@@ -1,4 +1,4 @@
-package com.agilesolutions.streams.config;
+package com.agilesolutions.stream.config;
 
 import com.agilesolutions.dto.AccountDto;
 import com.agilesolutions.jpa.model.AccountEntity;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 
 @Configuration
 @Slf4j
-public class SteamsConfig {
+public class BindingsConfig {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -23,8 +23,8 @@ public class SteamsConfig {
     @Bean
     public Function<AccountDto, Message<AccountDto>> accountProcessor() {
         return account -> {
-            boolean isExternal = "EXTERNAL".equals(account.accountType());
-            String destination = isExternal ? "accountConsumer-in-0" : "fraudConsumer-in-0";
+            boolean isInternal = "Savings".equals(account.accountType());
+            String destination = isInternal ? "accountConsumer-in-0" : "fraudConsumer-in-0";
 
             return MessageBuilder.withPayload(account)
                     .setHeader("spring.cloud.stream.sendto.destination", destination)
