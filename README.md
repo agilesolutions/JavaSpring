@@ -1,3 +1,5 @@
+
+
 # ShowCase project for Spring Boot with GitLab CI/CD 
 Demonstrating how to build a Spring Boot AllInOne (JPA, MongoDB, Kafka) Back-End REST-Full application with GitLab CI/CD and deploy it to a Kubernetes cluster using FluxCD.
 This application is set up with a WireMock server to mock Keycloak for testing Oauth2 login flows. This setup makes the application believe it is interacting with a real Keycloak OIDC Idp server during runtime. 
@@ -6,14 +8,33 @@ This application is set up with a WireMock server to mock Keycloak for testing O
 Note: This service is implemented as a Spring Boot monolith to demonstrate cross-cutting Spring Framework features such as security, scalability, service integration, and more. The design choices are intentional for this context and are not intended to represent microservices best practices.
 ```
 ## Features
-- Spring Boot application with JPA and MongoDB
-- Kafka producer and consumer
-- Asynchronous Communication with RabbitMQ and Spring Cloud Stream
 - REST API with controller and controller advice
 - Problem+JSON error handling
 - Declarative REST client
-- Spring Security for authentication and authorization
 - Spring Scheduler for scheduled tasks
+- Kubernetes readiness checks and custom health indicator to enabling graceful shutdown
+- Actuator for monitoring and management
+- Micrometer for metrics collection
+- OpenAPI/Swagger for API documentation
+- Testing with JUnit, Mockito, Testcontainers, and WireMock
+- Docker for containerization
+- Kubernetes manifests for deployment
+- FluxCD for GitOps-based continuous deployment
+- Gradle for build automation
+- Avro for data serialization
+- Lombok for reducing boilerplate code
+- Spring Data JPA for database access
+- Spring Data MongoDB for MongoDB access
+- Spring Kafka for Kafka integration
+- Spring AMQP for RabbitMQ integration
+- Spring Cloud Stream for building message-driven microservices
+- Spring Boot DevTools for development convenience
+- Spring Boot Test for testing support
+- Spring REST Docs for API documentation
+- Spring Actuator for application monitoring
+- Spring Security OAuth2 for securing REST endpoints
+- Spring Security JWT for JWT support
+- Spring Validation for input validation
 - Spring Retry for retrying operations
 - Helm for packaging and deploying applications
 - Kustomize for customizing Kubernetes manifests

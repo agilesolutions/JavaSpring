@@ -15,6 +15,7 @@ public class HealthService {
     public void unhealthy() {
         setHealthy(false);
         try {
+            // Here, we can code some features we want before the waiting process (connections closing, logging, etc.).
             Thread.sleep(15000L);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

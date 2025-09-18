@@ -20,3 +20,28 @@ spec:
           image: allinone
           ports:
             - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10 // wait 10 seconds before starting checks
+            timeoutSeconds: 3 // wait 3 seconds for a response
+            periodSeconds: 5 // check every 5 seconds
+            failureThreshold: 3 // let it fail 3 times
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 5
+            failureThreshold: 15
+          lifecycle:
+            preStop:
+              httpGet:
+                path: /unhealthy
+                port: http
+            restartPolicy: Always
+            terminationGracePeriodSeconds: 10
