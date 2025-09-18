@@ -1,7 +1,7 @@
 package com.agilesolutions.stream.config;
 
 import com.agilesolutions.dto.AccountDto;
-import com.agilesolutions.jpa.model.AccountEntity;
+import com.agilesolutions.jpa.model.Account;
 import com.agilesolutions.jpa.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class BindingsConfig {
     @Bean
     public Consumer<AccountDto> accountConsumer() {
         return dto -> {
-            AccountEntity entity = new AccountEntity();
+            Account entity = new Account();
             entity.setAccountNumber(dto.accountNumber());
             entity.setAccountType(dto.accountType());
             entity.setBranchAddress(dto.branchAddress());
