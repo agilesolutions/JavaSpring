@@ -44,6 +44,24 @@ spring:
       database: test
       port: 27017
 
+  cloud:
+    function:
+      definition: accountProcessor; accountConsumer; fraudConsumer
+    stream:
+      function.routing.enabled: true
+      bindings:
+        accountProcessor-in-0:
+          destination: accounts-topic
+          group: accountService
+        accountProcessor-out-0:
+          destination: processed-accounts-topic
+        accountConsumer-in-0:
+          destination: processed-accounts-topic
+          group: internalAccountService
+        fraudConsumer-in-0:
+          destination: processed-accounts-topic
+          group: fraudService
+
 
 
 twelvedata:
