@@ -9,7 +9,13 @@ import lombok.Builder;
 @Builder
 public record ShareDto(
         @NotEmpty(message = "Company name cannot be empty")
+        @Schema(
+                description = "TwelveData Data Asset owning companing like AAPL Apple Inc. ", example = "AAPL"
+        )
         String company,
         @PositiveOrZero(message = "Quantity must be zero or positive")
+        @Schema(
+                description = "Number shares. ", example = "10"
+        )
         Integer quantity) {
 }

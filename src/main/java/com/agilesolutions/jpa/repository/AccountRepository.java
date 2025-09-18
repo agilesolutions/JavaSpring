@@ -1,7 +1,7 @@
 package com.agilesolutions.jpa.repository;
 
-import com.agilesolutions.jpa.model.AccountEntity;
+import com.agilesolutions.jpa.model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 }

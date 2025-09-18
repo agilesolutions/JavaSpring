@@ -1,7 +1,7 @@
 package com.agilesolutions.stream.config;
 
 import com.agilesolutions.dto.AccountDto;
-import com.agilesolutions.jpa.model.AccountEntity;
+import com.agilesolutions.jpa.model.Account;
 import com.agilesolutions.jpa.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,7 +113,7 @@ class BindingsConfigTest {
         @Bean
         public Consumer<AccountDto> accountConsumer(AccountRepository accountRepository) {
             return dto -> {
-                AccountEntity entity = new AccountEntity();
+                Account entity = new Account();
                 entity.setAccountNumber(dto.accountNumber());
                 entity.setAccountType(dto.accountType());
                 entity.setBranchAddress(dto.branchAddress());
