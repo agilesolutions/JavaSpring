@@ -14,6 +14,14 @@ import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller providing an endpoint to switch the application's health state to unhealthy.
+ * <p>
+ * This is typically used by Kubernetes preStop hooks to gracefully remove the pod from service.
+ * When the /unhealthy endpoint is called, the pod's health status is set to DOWN and the process waits
+ * for a configured termination grace period to allow for graceful shutdown.
+ * </p>
+ */
 @Tag(
         name = "REST API to switch POD to unhealthy state and trigger kubernetes preStop hook to gracefully remove POD from service",
         description = "REST API to switch POD to unhealthy state and trigger kubernetes preStop hook to gracefully remove POD from service"
@@ -25,6 +33,16 @@ public class HealthController {
 
     private final HealthService healthService;
 
+    /**
+     * Switches the application's health state to unhealthy.
+     * <p>
+     * This endpoint is intended to be called by Kubernetes preStop hooks. It sets the application's health
+     * status to DOWN and waits for the termination grace period (15 seconds) to allow for graceful removal
+     * of the pod from service. During this time, the pod is removed from the service endpoints and new
+     * traffic is prevented from reaching it.
+     * </p>
+     * <b>Access restricted to users with ADMIN role.</b>
+     */
     @Operation(
             summary = "Switch POD to unhealthy state",
             description = "REST API to switch POD to unhealthy state and trigger kubernetes preStop hook to gracefully remove POD from service, removes IP of this pod from iptable and prevents new traffic from coming"
@@ -41,10 +59,6 @@ public class HealthController {
     )
     @GetMapping(value = "/unhealthy")
     @PreAuthorize("hasRole('ADMIN')")
-    /**
-     * The preStop hook calls the /unhealthy endpoint and sets the application’s health status to DOWN and waits here for the terminationGracePeriodSeconds value (15 sec.).
-     * Call this endpoint only when you want to remove the pod from service gracefully.
-     */
     public void unhealthy() {
         log.info("Switching to unhealthy state");
         healthService.unhealthy();
