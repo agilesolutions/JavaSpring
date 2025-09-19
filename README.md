@@ -7,38 +7,48 @@ This application is set up with a WireMock server to mock Keycloak for testing O
 ```
 Note: This service is implemented as a Spring Boot monolith to demonstrate cross-cutting Spring Framework features such as security, scalability, service integration, and more. The design choices are intentional for this context and are not intended to represent microservices best practices.
 ```
-## Features
-- REST API with controller and controller advice
-- Problem+JSON error handling
+## Overview
+This project is a comprehensive Spring Boot application that integrates various technologies and frameworks to provide a robust and scalable solution. The application demonstrates the following key features:
+- RESTful API development with Spring Boot
+- Integration with relational databases using Spring Data JPA
+- Integration with NoSQL databases using Spring Data MongoDB
+- Spring Cloud OpenFeign for declarative REST client
+- Spring Cloud Gateway for API Gateway
+- Spring Cloud Config for externalized configuration management
+- Spring Cloud Netflix Eureka for service discovery
+- Spring Cloud Netflix Hystrix for circuit breaker pattern
+- Spring Cloud Sleuth and Zipkin for distributed tracing
+- Spring Cloud Eureka for service discovery
+- Messaging with Apache Kafka using Spring Kafka
+- Containerization with Docker
+- Deployment to Kubernetes using Helm and Kustomize
+- Continuous Integration and Continuous Deployment (CI/CD) using GitLab CI/CD and FluxCD
+- Monitoring and logging with Prometheus, Grafana, and the ELK stack (Elasticsearch, Logstash, Kibana)
+- Security with Spring Security, OAuth2, and JWT
+- Controller advice and Problem+JSON error handling
 - Declarative REST client
 - Spring Scheduler for scheduled tasks
 - Kubernetes readiness checks and custom health indicator to enabling graceful shutdown
 - Actuator for monitoring and management
-- Micrometer for metrics collection
 - OpenAPI/Swagger for API documentation
 - Testing with JUnit, Mockito, Testcontainers, and WireMock
-- Docker for containerization
 - Kubernetes manifests for deployment
-- FluxCD for GitOps-based continuous deployment
-- Gradle for build automation
 - Avro for data serialization
 - Lombok for reducing boilerplate code
-- Spring Data JPA for database access
-- Spring Data MongoDB for MongoDB access
-- Spring Kafka for Kafka integration
 - Spring AMQP for RabbitMQ integration
-- Spring Cloud Stream for building message-driven microservices
+- Spring Cloud Stream for building message-driven microservices and Async communication
 - Spring Boot DevTools for development convenience
 - Spring Boot Test for testing support
 - Spring REST Docs for API documentation
-- Spring Actuator for application monitoring
-- Spring Security OAuth2 for securing REST endpoints
-- Spring Security JWT for JWT support
 - Spring Validation for input validation
 - Spring Retry for retrying operations
-- Helm for packaging and deploying applications
-- Kustomize for customizing Kubernetes manifests
-- DevOps pipeline for CI/CD
+
+## Overview Platform Architecture
+This diagram illustrates the architecture of the Spring Boot application and its integration with various components and services.
+
+<img title="Spring Boot Application Architecture" alt="Alt text" src="/images/architecture.png">
+
+
 
 ## Prerequisites
 - Java 21 or higher
@@ -205,7 +215,6 @@ This application is setup to securing and authorizing REST endpoints using Sprin
 ### Architecture
 This is depicting a typical OIDC Authorization Code Flow. 
 1. The client requests an access token from the Authorization Server
-2. 
 2. The Authorization Server validates credentials and returns a token
 3. The client includes this token when requesting protected resources
 4. The Resource Server validates the token before serving the request
